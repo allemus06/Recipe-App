@@ -2,6 +2,8 @@ package cecs453.android.csulb.edu.recipeapp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,15 +24,24 @@ public class Activity_Login extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private Button loginButton;
+    private Button createAccountButton;
+    private Button emailClearButton;
+    private Button passwordClearButton;
+    private Button conPassClearButton;
     private EditText emailET;
     private EditText passwordET;
+    private EditText conPassET;
+
+    //0 = Login State
+    //1 = Create Account State
+    private int CREATE_ACCOUNT_STATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__login);
+        setContentView(R.layout.activity_login);
 
-        //getActionBar().hide();
+        getSupportActionBar().hide();
         initializeViews();
 
         mAuth = FirebaseAuth.getInstance();
@@ -52,23 +63,76 @@ public class Activity_Login extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn(emailET.getText().toString(), passwordET.getText().toString());
+                if (CREATE_ACCOUNT_STATE == 1) {
+                    createAccount(emailET.getText().toString(), passwordET.getText().toString());
+                } else {
+                    signIn(emailET.getText().toString(), passwordET.getText().toString());
+                }
             }
         });
 
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user != null) {
-//            // Name, email address, and profile photo Url
-//            String name = user.getDisplayName();
-//            String email = user.getEmail();
-//            Uri photoUrl = user.getPhotoUrl();
-//
-//            // The user's ID, unique to the Firebase project. Do NOT use this value to
-//            // authenticate with your backend server, if you have one. Use
-//            // FirebaseUser.getToken() instead.
-//            String uid = user.getUid();
-//        }
+        createAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                if (CREATE_ACCOUNT_STATE == 1) {
+                    createAccountButton.setText("CREATE ACCOUNT");
+                    loginButton.setText("LOGIN");
+
+                    conPassET.setVisibility(View.INVISIBLE);
+                    conPassClearButton.setVisibility(View.INVISIBLE);
+
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(getApplicationContext(), R.layout.activity_login);
+                    constraintSet.connect(R.id.passwordET, ConstraintSet.BOTTOM, R.id.loginLinearLayout, ConstraintSet.TOP);
+                    ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.loginLayout);
+                    constraintSet.applyTo(constraintLayout);
+
+                    conPassET.setVisibility(View.INVISIBLE);
+                    conPassClearButton.setVisibility(View.INVISIBLE);
+
+                    CREATE_ACCOUNT_STATE = 0;
+                } else {
+                    createAccountButton.setText("BACK");
+                    loginButton.setText("CREATE ACCOUNT");
+                    conPassET.setText("");
+
+                    conPassET.setVisibility(View.VISIBLE);
+                    conPassClearButton.setVisibility(View.VISIBLE);
+
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(getApplicationContext(), R.layout.activity_login);
+                    constraintSet.connect(R.id.passwordET, ConstraintSet.BOTTOM, R.id.conPassET, ConstraintSet.TOP);
+                    ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.loginLayout);
+                    constraintSet.applyTo(constraintLayout);
+
+                    CREATE_ACCOUNT_STATE = 1;
+                }
+                //createAccount(emailET.getText().toString(), passwordET.getText().toString());
+            }
+        });
+
+        emailClearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emailET.setText("");
+                emailET.requestFocus();
+            }
+        });
+        passwordClearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passwordET.setText("");
+                passwordET.requestFocus();
+            }
+        });
+        conPassClearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                conPassET.setText("");
+                conPassET.requestFocus();
+            }
+        });
     }
 
     @Override
@@ -88,7 +152,26 @@ public class Activity_Login extends AppCompatActivity {
     private void initializeViews () {
         emailET = (EditText) findViewById(R.id.emailET);
         passwordET = (EditText) findViewById(R.id.passwordET);
+        conPassET = (EditText) findViewById(R.id.conPassET);
         loginButton = (Button) findViewById(R.id.loginButton);
+        emailClearButton = (Button) findViewById(R.id.emailClearButton);
+        passwordClearButton = (Button) findViewById(R.id.passwordClearButton);
+        conPassClearButton = (Button) findViewById(R.id.conPassClearButton);
+        createAccountButton = (Button) findViewById(R.id.createAccountButton);
+
+        conPassET.setVisibility(View.INVISIBLE);
+        conPassClearButton.setVisibility(View.INVISIBLE);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(getApplicationContext(), R.layout.activity_login);
+        constraintSet.connect(R.id.passwordET, ConstraintSet.BOTTOM, R.id.loginLinearLayout, ConstraintSet.TOP);
+        ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.loginLayout);
+        constraintSet.applyTo(constraintLayout);
+
+        conPassET.setVisibility(View.INVISIBLE);
+        conPassClearButton.setVisibility(View.INVISIBLE);
+
+        CREATE_ACCOUNT_STATE = 0;
     }
 
     private void createAccount(String email, String password) {
@@ -99,30 +182,22 @@ public class Activity_Login extends AppCompatActivity {
 
         //showProgressDialog();
 
-        // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.i("Account", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.i("Account", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Activity_Login.this, "Authentication failed.",
+                            Toast.makeText(Activity_Login.this, "Create Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
 
-                        // [START_EXCLUDE]
                         //hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
-        // [END create_user_with_email]
     }
 
     private void signIn(String email, String password) {
@@ -133,34 +208,22 @@ public class Activity_Login extends AppCompatActivity {
 
         //showProgressDialog();
 
-        // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.i("Account", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
                             Toast.makeText(Activity_Login.this, "Login Successful for " + user.getEmail().toString(), Toast.LENGTH_SHORT).show();
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.i("Account", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(Activity_Login.this, "Authentication failed.",
+                            Toast.makeText(Activity_Login.this, "Login Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-
-                        // [START_EXCLUDE]
-                        if (!task.isSuccessful()) {
-                            //mStatusTextView.setText(R.string.auth_failed);
                         }
                         //hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
-        // [END sign_in_with_email]
     }
 
     private boolean validateForm() {
@@ -168,7 +231,7 @@ public class Activity_Login extends AppCompatActivity {
 
         String email = emailET.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            emailET.setError("Required.");
+            emailET.setError("Required");
             valid = false;
         } else {
             emailET.setError(null);
@@ -176,36 +239,29 @@ public class Activity_Login extends AppCompatActivity {
 
         String password = passwordET.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            passwordET.setError("Required.");
+            passwordET.setError("Required");
             valid = false;
         } else {
             passwordET.setError(null);
         }
 
+        String conPassword = conPassET.getText().toString();
+        if (CREATE_ACCOUNT_STATE == 1) {
+            if (TextUtils.isEmpty(conPassword)) {
+                conPassET.setError("Required");
+                valid = false;
+            } else {
+                if (password.equals(conPassword)) {
+                    conPassET.setError(null);
+                } else {
+                    conPassET.setError("Passwords don't match");
+                    valid = false;
+                }
+            }
+        } else {
+            conPassET.setError(null);
+        }
+
         return valid;
     }
-
-//    private void updateUI(FirebaseUser user) {
-//        hideProgressDialog();
-//        if (user != null) {
-//            mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
-//                    user.getEmail(), user.isEmailVerified()));
-//            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-//
-//            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-//            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-//            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
-//
-//            findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
-//        } else {
-//            mStatusTextView.setText(R.string.signed_out);
-//            mDetailTextView.setText(null);
-//
-//            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-//            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-//            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
-//        }
-//    }
-
-
 }
