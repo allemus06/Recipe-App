@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -133,6 +135,60 @@ public class Activity_Login extends AppCompatActivity {
                 conPassET.requestFocus();
             }
         });
+
+        emailET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                emailET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+                emailClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                passwordET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+                passwordClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        conPassET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                conPassET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+                conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
@@ -189,6 +245,8 @@ public class Activity_Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.i("Account", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(Activity_Login.this, "Account Created",
+                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Log.i("Account", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(Activity_Login.this, "Create Authentication failed.",
@@ -232,6 +290,8 @@ public class Activity_Login extends AppCompatActivity {
         String email = emailET.getText().toString();
         if (TextUtils.isEmpty(email)) {
             emailET.setError("Required");
+            emailET.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
+            emailClearButton.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
             valid = false;
         } else {
             emailET.setError(null);
@@ -240,6 +300,8 @@ public class Activity_Login extends AppCompatActivity {
         String password = passwordET.getText().toString();
         if (TextUtils.isEmpty(password)) {
             passwordET.setError("Required");
+            passwordET.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
+            passwordClearButton.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));;
             valid = false;
         } else {
             passwordET.setError(null);
@@ -249,12 +311,16 @@ public class Activity_Login extends AppCompatActivity {
         if (CREATE_ACCOUNT_STATE == 1) {
             if (TextUtils.isEmpty(conPassword)) {
                 conPassET.setError("Required");
+                conPassET.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
+                conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
                 valid = false;
             } else {
                 if (password.equals(conPassword)) {
                     conPassET.setError(null);
                 } else {
                     conPassET.setError("Passwords don't match");
+                    conPassET.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
+                    conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorRedTransparent55));
                     valid = false;
                 }
             }
