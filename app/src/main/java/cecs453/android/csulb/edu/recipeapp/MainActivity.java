@@ -1,15 +1,134 @@
 package cecs453.android.csulb.edu.recipeapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private String apiURL = "https://api.edamam.com/";
+    private String api_key = "ec3ca0c66808fdf12238ac3135b5f3c7"; //TODO: Remove from here
+    private String app_id = "79118f0f";
+    private AsyncHttpClient client;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private FirebaseUser user;
+    private String uid;
+
+    private TextView mainTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeViews();
+
+        if (isUserSignedIn()) {
+            Toast.makeText(MainActivity.this, "User " + user.getEmail() + " is still signed in", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "User is not signed in", Toast.LENGTH_SHORT).show();
+        }
+
+        getHTTPConnection();
+
+    }
+
+    private void initializeViews () {
+        mainTV = (TextView)findViewById(R.id.mainTV);
+    }
+
+    private boolean isUserSignedIn() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        return user != null;
+
+    }
+
+    private void getHTTPConnection() {
+
+        final String relativeURL = "search?q=chicken&app_id=" + app_id + "&app_key=" + api_key + "&from=0&to=1";
+
+        client = new AsyncHttpClient();
+        client.get(apiURL + relativeURL, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                // called when response HTTP status is "200 OK"
+                Log.i("API Request Pass", response.toString());
+                mainTV.setText("API Request Pass " + statusCode);
+
+
+
+                EdamamClient.get(relativeURL, null, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mainTV.setText("Failed on JSONObject");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mainTV.setText("Failed on JSONArray");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        mainTV.setText("Failed on Throwable");
+                    }
+
+                    //TODO: use this JSONObject to do things that are not fun :(
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        // If the response is JSONObject instead of expected JSONArray
+                        mainTV.setText("Succ on first + " + response.toString());
+                        Log.i("Json return", response.toString());
+
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        // Pull out the first event on the public timeline
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.i("API Request Fail", errorResponse.toString());
+                mainTV.setText("API Request Fail " + statusCode);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
 
     }
 }

@@ -7,6 +7,7 @@
     tools:context="cecs453.android.csulb.edu.recipeapp.MainActivity">
 
     <TextView
+        android:id="@+id/mainTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"

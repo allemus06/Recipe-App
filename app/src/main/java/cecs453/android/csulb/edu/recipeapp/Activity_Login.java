@@ -1,5 +1,6 @@
 package cecs453.android.csulb.edu.recipeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -61,6 +62,17 @@ public class Activity_Login extends AppCompatActivity {
                 }
             }
         };
+
+        //TODO: Remove this (I got tired of logging in every time
+        Button skipButton = (Button) findViewById(R.id.skipButton);
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emailET.setText("alex@test.com");
+                passwordET.setText("123456");
+                signIn("alex@test.com", "123456");
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,7 +242,7 @@ public class Activity_Login extends AppCompatActivity {
         CREATE_ACCOUNT_STATE = 0;
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(final String email, final String password) {
         Log.i("Account", "createAccount:" + email);
         if (!validateForm()) {
             return;
@@ -244,9 +256,23 @@ public class Activity_Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.i("Account", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isComplete()) {
+                                        Toast.makeText(Activity_Login.this, "Sent verification email to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(Activity_Login.this, "Verification email failed to send", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            });
+
                             Toast.makeText(Activity_Login.this, "Account Created",
                                     Toast.LENGTH_SHORT).show();
+
+                            signIn(email, password);
                         } else {
                             Log.i("Account", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(Activity_Login.this, "Create Authentication failed.",
@@ -274,6 +300,9 @@ public class Activity_Login extends AppCompatActivity {
                             Log.i("Account", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(Activity_Login.this, "Login Successful for " + user.getEmail().toString(), Toast.LENGTH_SHORT).show();
+
+                            Intent mainActivityIntent = new Intent(Activity_Login.this, MainActivity.class);
+                            startActivity(mainActivityIntent);
                         } else {
                             Log.i("Account", "signInWithEmail:failure", task.getException());
                             Toast.makeText(Activity_Login.this, "Login Authentication failed.",
