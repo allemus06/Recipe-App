@@ -2,6 +2,7 @@ package cecs453.android.csulb.edu.recipeapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,7 +14,10 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getHTTPConnection() {
 
-        final String relativeURL = "search?q=chicken&app_id=" + app_id + "&app_key=" + api_key + "&from=0&to=1";
+        final String relativeURL = "search?q=chicken&app_id=" + app_id + "&app_key=" + api_key + "&from=0&to=3";
 
         client = new AsyncHttpClient();
         client.get(apiURL + relativeURL, new AsyncHttpResponseHandler() {
@@ -106,7 +110,40 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
-                        mainTV.setText("Succ on first + " + response.toString());
+                        //mainTV.setText("Succ on first + " + response.toString());
+                        ArrayList<Recipe> results = new ArrayList<>();
+                        try {
+
+                            JSONArray hits = response.getJSONArray("hits");
+                            for (int i = 0; i < hits.length(); i++) {
+                                Recipe recipeObject = new Recipe();
+                                JSONObject recipe = hits.getJSONObject(i).getJSONObject("recipe");
+                                String label = recipe.getString("label");
+                                recipeObject.setLabel(label);
+
+                                String imgSource = recipe.getString("image");
+                                recipeObject.setImageLink(imgSource);
+
+                                int yield = recipe.getInt("yield");
+                                recipeObject.setYield(yield);
+
+                                ArrayList<String> dietLabels = covertJAtoAL(recipe.getJSONArray("dietLabels"));
+                                recipeObject.setDietLabels(dietLabels);
+
+                                ArrayList<String> healthLabels = covertJAtoAL(recipe.getJSONArray("healthLabels"));
+                                recipeObject.setHealthLabels(healthLabels);
+
+                                ArrayList<String> ingredientLines = covertJAtoAL(recipe.getJSONArray("ingredientLines"));
+                                recipeObject.setIngredientLines(ingredientLines);
+                                results.add(recipeObject);
+                            }
+
+                            mainTV.setText("Hits: " + results.toString());
+                            mainTV.setMovementMethod(new ScrollingMovementMethod());
+                        } catch (JSONException e) {
+                            mainTV.setText("Hits: Error");
+                            e.printStackTrace();
+                        }
                         Log.i("Json return", response.toString());
 
                     }
@@ -132,5 +169,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private ArrayList<String> covertJAtoAL(JSONArray dietLabels) {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 0; i < dietLabels.length(); i++) {
+            try {
+                result.add(dietLabels.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 }
