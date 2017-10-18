@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         initializeViews();
 
-        if (isUserSignedIn()) {
-            Toast.makeText(MainActivity.this, "User " + user.getEmail() + " is still signed in", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this, "User is not signed in", Toast.LENGTH_SHORT).show();
-        }
+//        if (isUserSignedIn()) {
+//            Toast.makeText(MainActivity.this, "User " + user.getEmail() + " is still signed in", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(MainActivity.this, "User is not signed in", Toast.LENGTH_SHORT).show();
+//        }
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
