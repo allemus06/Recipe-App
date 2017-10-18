@@ -22,12 +22,12 @@ public class Recipe {
     private ArrayList<String> cautions;
     /** String of ingredient and amount */
     private ArrayList<String> ingredientLines;
-    /** Key: ingredientLines Value: weight in grams */
-    private HashMap<String, Double> ingredientWeight;
     /** Amount of calories of the recipe */
     private double calories;
     /** Total weight of the recipe in grams*/
     private double totalWeight;
+    /** The nutrient hashmap of the recipe */
+    private HashMap<String, Nutrient> nutrients;
 
     public Recipe() {
     }
@@ -88,14 +88,6 @@ public class Recipe {
         this.ingredientLines = ingredientLines;
     }
 
-    public HashMap<String, Double> getIngredientWeight() {
-        return ingredientWeight;
-    }
-
-    public void setIngredientWeight(HashMap<String, Double> ingredientWeight) {
-        this.ingredientWeight = ingredientWeight;
-    }
-
     public double getCalories() {
         return calories;
     }
@@ -112,16 +104,27 @@ public class Recipe {
         this.totalWeight = totalWeight;
     }
 
+    public HashMap<String, Nutrient> getNutrients() {
+        return nutrients;
+    }
+
+    public void setNutrients(HashMap<String, Nutrient> nutrients) {
+        this.nutrients = nutrients;
+    }
+
     @Override
     public String toString() {
         return "Recipe{" +
-                "label='" + label + '\'' +
-                ", imageLink='" + imageLink + '\'' +
-                ", yield=" + yield +
-                ", dietLabels=" + dietLabels +
-                ", healthLabels=" + healthLabels +
-                ", cautions=" + cautions +
-                ", ingredientLines=" + ingredientLines +
+                "label='" + label + "\n" +
+                ", imageLink='" + imageLink + "\n" +
+                ", yield=" + yield + "\n" +
+                ", dietLabels=" + dietLabels + "\n" +
+                ", healthLabels=" + healthLabels + "\n" +
+                ", cautions=" + cautions + "\n" +
+                ", ingredientLines=" + ingredientLines + "\n" +
+                ", calories=" + calories + "\n" +
+                ", totalWeight=" + totalWeight + "\n" +
+                ", nutrients=" + nutrients.toString() + "\n" +
                 '}';
     }
 }
