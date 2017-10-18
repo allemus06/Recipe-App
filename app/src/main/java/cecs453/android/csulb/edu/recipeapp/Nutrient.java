@@ -1,10 +1,12 @@
 package cecs453.android.csulb.edu.recipeapp;
 
+import java.io.Serializable;
+
 /**
  * TODO: Add a class header comment.
  */
 
-public class Nutrient {
+public class Nutrient implements Serializable{
     private String label;
     private double quantity;
     private String unit;

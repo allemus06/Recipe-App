@@ -1,5 +1,6 @@
 package cecs453.android.csulb.edu.recipeapp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,7 +8,7 @@ import java.util.HashMap;
  * TODO: Add a class header comment.
  */
 
-public class Recipe {
+public class Recipe implements Serializable{
     /** Name of the recipe */
     private String label;
     /** Web link to the recipe image */

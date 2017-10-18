@@ -1,5 +1,6 @@
 package cecs453.android.csulb.edu.recipeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText searchET;
     private EditText amountET;
     private Button searchButton;
+    private Button firstResult;
+
+    private ArrayList<Recipe> results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +66,17 @@ public class MainActivity extends AppCompatActivity {
                 if (!searchET.getText().toString().isEmpty() && !amountET.getText().toString().isEmpty()) {
                     String searchRecipe = searchET.getText().toString();
                     int resultsRequested = Integer.parseInt(amountET.getText().toString());
-                    String finalSearchRecipe = searchRecipe;
-                    int finalResultsRequested = resultsRequested;
-                    search(finalSearchRecipe, finalResultsRequested);
+                    search(searchRecipe, resultsRequested);
                 }
+            }
+        });
+
+        firstResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
+                viewResultIntent.putExtra("RecipeSelection", results.get(0));
+                startActivity(viewResultIntent);
             }
         });
     }
@@ -79,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         searchET = (EditText)findViewById(R.id.searchET);
         amountET = (EditText)findViewById(R.id.amountET);
         searchButton = (Button)findViewById(R.id.searchButton);
+        firstResult = (Button) findViewById(R.id.firstResultButton);
     }
 
     private boolean isUserSignedIn() {
@@ -130,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
                         //mainTV.setText("Succ on first + " + response.toString());
-                        ArrayList<Recipe> results = new ArrayList<>();
+                        results = new ArrayList<>();
                         try {
 
                             JSONArray hits = response.getJSONArray("hits");
@@ -197,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 recipeObject.setNutrients(nutrients);
                                 results.add(recipeObject);
-                                mainTV.setText("Nutrients: " + recipeObject.toString());
+                                mainTV.setText("Nutrients: " + results.toString());
                             }
 
                             //mainTV.setText("Hits: " + results.toString());
