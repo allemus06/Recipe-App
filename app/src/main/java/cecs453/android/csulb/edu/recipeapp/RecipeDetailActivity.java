@@ -10,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
     private ImageView recipeImageView;
     private TextView recipeName;
+    private TextView ingredientList;
 
     private Recipe recipe;
 
@@ -34,11 +36,24 @@ public class RecipeDetailActivity extends AppCompatActivity {
         //Set Recipe image
         new DownloadImageTask(recipeImageView).execute(recipe.getImageLink());
         recipeName.setText(recipe.getLabel());
+        ArrayList<String> ingredients = recipe.getIngredientLines();
+        for (int i = 0; i<ingredients.size(); i++){
+            if(i == 0){
+                ingredientList.setText(ingredients.get(i));
+            }
+            else{
+                ingredientList.append(System.getProperty("line.separator"));
+                ingredientList.append(ingredients.get(i));
+
+            }
+        }
     }
 
     private void initializeViews() {
         recipeImageView = (ImageView) findViewById(R.id.recipeImageView);
         recipeName = (TextView) findViewById(R.id.recipeName);
+        ingredientList = (TextView) findViewById(R.id.ingredientList);
+
     }
 
 
