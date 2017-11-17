@@ -301,7 +301,7 @@ public class Activity_Login extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(Activity_Login.this, "Login Successful for " + user.getEmail().toString(), Toast.LENGTH_SHORT).show();
 
-                            Intent mainActivityIntent = new Intent(Activity_Login.this, MainActivity.class);
+                            Intent mainActivityIntent = new Intent(Activity_Login.this, MainActivity1.class);
                             startActivity(mainActivityIntent);
                         } else {
                             Log.i("Account", "signInWithEmail:failure", task.getException());

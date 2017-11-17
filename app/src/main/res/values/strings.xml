@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+    <string name="user_input"><i>Enter name of food...</i></string>
 </resources>

@@ -1,6 +1,5 @@
 package cecs453.android.csulb.edu.recipeapp;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity1 extends AppCompatActivity {
 
     private String apiURL = "https://api.edamam.com/";
     private String api_key = "ec3ca0c66808fdf12238ac3135b5f3c7"; //TODO: Remove from here
@@ -40,59 +40,48 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private String uid;
 
+    private ImageView appLogo;
+    private EditText userInput;
+    private Button searchResults;
     private TextView mainTV;
-    private EditText searchET;
-    private EditText amountET;
-    private Button searchButton;
-    private Button firstResult;
 
     private ArrayList<Recipe> results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main1);
         getSupportActionBar().hide();
 
         initializeViews();
 
-//        if (isUserSignedIn()) {
-//            Toast.makeText(MainActivity.this, "User " + user.getEmail() + " is still signed in", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(MainActivity.this, "User is not signed in", Toast.LENGTH_SHORT).show();
-//        }
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!searchET.getText().toString().isEmpty() && !amountET.getText().toString().isEmpty()) {
-                    String searchRecipe = searchET.getText().toString();
-                    int resultsRequested = Integer.parseInt(amountET.getText().toString());
+                if (!searchResults.getText().toString().isEmpty()) {
+                    String searchRecipe = searchResults.getText().toString();
+                    int resultsRequested = 1; // changed from amount of results to default 1
                     search(searchRecipe, resultsRequested);
+
+                    //automatically just return first result
+                    Intent viewResultIntent = new Intent (MainActivity1.this, RecipeDetailActivity.class);
+                    viewResultIntent.putExtra("RecipeSelection", results.get(0));
+                    startActivity(viewResultIntent);
                 }
             }
         });
 
-        firstResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
-                viewResultIntent.putExtra("RecipeSelection", results.get(0));
-                startActivity(viewResultIntent);
-            }
-        });
+    }
+
+    private void initializeViews () {
+        appLogo = (ImageView)findViewById(R.id.appLogo);
+        userInput = (EditText)findViewById(R.id.userInput);
+        searchResults = (Button)findViewById(R.id.continueButton);
+        mainTV = (TextView)findViewById(R.id.mainTV);
     }
 
     private void search(String searchRecipe, int resultsRequested) {
         getHTTPConnection(searchRecipe, resultsRequested);
-    }
-
-    private void initializeViews () {
-        mainTV = (TextView)findViewById(R.id.mainTV);
-        searchET = (EditText)findViewById(R.id.searchET);
-        amountET = (EditText)findViewById(R.id.amountET);
-        searchButton = (Button)findViewById(R.id.searchButton);
-        firstResult = (Button) findViewById(R.id.firstResultButton);
     }
 
     private boolean isUserSignedIn() {
@@ -101,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         return user != null;
 
     }
+
 
     private void getHTTPConnection(String searchRecipe, int resultsRequested) {
 
