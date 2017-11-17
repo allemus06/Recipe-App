@@ -1,15 +1,14 @@
 package cecs453.android.csulb.edu.recipeapp;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,11 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private String uid;
 
-    private TextView mainTV;
-    private EditText searchET;
-    private EditText amountET;
+    private ImageView appLogo;
+    private EditText userInput;
     private Button searchButton;
-    private Button firstResult;
+    private TextView mainTV;
 
     private ArrayList<Recipe> results;
 
@@ -56,43 +54,31 @@ public class MainActivity extends AppCompatActivity {
 
         initializeViews();
 
-//        if (isUserSignedIn()) {
-//            Toast.makeText(MainActivity.this, "User " + user.getEmail() + " is still signed in", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(MainActivity.this, "User is not signed in", Toast.LENGTH_SHORT).show();
-//        }
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!searchET.getText().toString().isEmpty() && !amountET.getText().toString().isEmpty()) {
-                    String searchRecipe = searchET.getText().toString();
-                    int resultsRequested = Integer.parseInt(amountET.getText().toString());
+                if (!userInput.getText().toString().isEmpty()) {
+                    String searchRecipe = userInput.getText().toString();
+                    int resultsRequested = 1; // changed from amount of results to default 1
                     search(searchRecipe, resultsRequested);
+
                 }
             }
         });
 
-        firstResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
-                viewResultIntent.putExtra("RecipeSelection", results.get(0));
-                startActivity(viewResultIntent);
-            }
-        });
+    }
+
+    private void initializeViews () {
+        appLogo = (ImageView)findViewById(R.id.appLogo);
+        userInput = (EditText)findViewById(R.id.userInput);
+        searchButton = (Button)findViewById(R.id.continueButton);
+        mainTV = (TextView)findViewById(R.id.errorTextView);
+
+        results = new ArrayList<>();
     }
 
     private void search(String searchRecipe, int resultsRequested) {
         getHTTPConnection(searchRecipe, resultsRequested);
-    }
-
-    private void initializeViews () {
-        mainTV = (TextView)findViewById(R.id.mainTV);
-        searchET = (EditText)findViewById(R.id.searchET);
-        amountET = (EditText)findViewById(R.id.amountET);
-        searchButton = (Button)findViewById(R.id.searchButton);
-        firstResult = (Button) findViewById(R.id.firstResultButton);
     }
 
     private boolean isUserSignedIn() {
@@ -101,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         return user != null;
 
     }
+
 
     private void getHTTPConnection(String searchRecipe, int resultsRequested) {
 
@@ -144,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
                         //mainTV.setText("Succ on first + " + response.toString());
-                        results = new ArrayList<>();
+
                         try {
 
                             JSONArray hits = response.getJSONArray("hits");
@@ -222,13 +209,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Log.i("Json return", response.toString());
 
+                        Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
+                        viewResultIntent.putExtra("RecipeSelection", results.get(0));
+                        startActivity(viewResultIntent);
+
                     }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        // Pull out the first event on the public timeline
-                        //TODO: Put progress bar end
-                    }
                 });
             }
 

@@ -68,9 +68,9 @@ public class Activity_Login extends AppCompatActivity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                emailET.setText("alex@test.com");
+                emailET.setText("a@test.com");
                 passwordET.setText("123456");
-                signIn("alex@test.com", "123456");
+                signIn("a@test.com", "123456");
             }
         });
 
@@ -301,7 +301,7 @@ public class Activity_Login extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(Activity_Login.this, "Login Successful for " + user.getEmail().toString(), Toast.LENGTH_SHORT).show();
 
-                            Intent mainActivityIntent = new Intent(Activity_Login.this, MainActivity1.class);
+                            Intent mainActivityIntent = new Intent(Activity_Login.this, MainActivity.class);
                             startActivity(mainActivityIntent);
                         } else {
                             Log.i("Account", "signInWithEmail:failure", task.getException());
