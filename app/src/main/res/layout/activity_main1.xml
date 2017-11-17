@@ -17,7 +17,7 @@
         android:id="@+id/userInput"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text="@string/user_input"
+        android:hint="@string/user_input"
         android:textAlignment="center"
         android:fontFamily="sans-serif-light"
         android:textSize="25dp"
@@ -40,12 +40,12 @@
         />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/mainTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/continueButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp"
         android:text="TextView"
-        android:visibility="visible"/>
+        android:visibility="invisible"/>
 </RelativeLayout>

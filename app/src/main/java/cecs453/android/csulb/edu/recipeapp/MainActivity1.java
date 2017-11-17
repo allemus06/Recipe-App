@@ -63,10 +63,6 @@ public class MainActivity1 extends AppCompatActivity {
                     int resultsRequested = 1; // changed from amount of results to default 1
                     search(searchRecipe, resultsRequested);
 
-                    //automatically just return first result
-                    Intent viewResultIntent = new Intent (MainActivity1.this, RecipeDetailActivity.class);
-                    viewResultIntent.putExtra("RecipeSelection", results.get(0));
-                    startActivity(viewResultIntent);
                 }
             }
         });
@@ -78,6 +74,8 @@ public class MainActivity1 extends AppCompatActivity {
         userInput = (EditText)findViewById(R.id.userInput);
         searchResults = (Button)findViewById(R.id.continueButton);
         mainTV = (TextView)findViewById(R.id.mainTV);
+
+        results = new ArrayList<>();
     }
 
     private void search(String searchRecipe, int resultsRequested) {
@@ -134,7 +132,7 @@ public class MainActivity1 extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         // If the response is JSONObject instead of expected JSONArray
                         //mainTV.setText("Succ on first + " + response.toString());
-                        results = new ArrayList<>();
+
                         try {
 
                             JSONArray hits = response.getJSONArray("hits");
@@ -212,13 +210,12 @@ public class MainActivity1 extends AppCompatActivity {
                         }
                         Log.i("Json return", response.toString());
 
+                        Intent viewResultIntent = new Intent (MainActivity1.this, RecipeDetailActivity.class);
+                        viewResultIntent.putExtra("RecipeSelection", results.get(0));
+                        startActivity(viewResultIntent);
+
                     }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        // Pull out the first event on the public timeline
-                        //TODO: Put progress bar end
-                    }
                 });
             }
 
