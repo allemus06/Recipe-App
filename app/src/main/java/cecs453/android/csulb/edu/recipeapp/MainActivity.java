@@ -3,6 +3,8 @@ package cecs453.android.csulb.edu.recipeapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView appLogo;
     private EditText userInput;
     private Button searchButton;
-    private TextView errorTextView;
+    //private TextView errorTextView;
+    private RecyclerView recyclerView;
+
+    RecyclerAdapter adapter;
 
     private ArrayList<Recipe> results;
 
@@ -72,7 +78,16 @@ public class MainActivity extends AppCompatActivity {
         appLogo = (ImageView)findViewById(R.id.appLogo);
         userInput = (EditText)findViewById(R.id.userInput);
         searchButton = (Button)findViewById(R.id.continueButton);
-        errorTextView = (TextView)findViewById(R.id.errorTextView);
+        //errorTextView = (TextView)findViewById(R.id.errorTextView);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        // we're setting the RecyclerView to display items vertically
+        adapter = new RecyclerAdapter(results);
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
 
         results = new ArrayList<>();
     }
@@ -111,19 +126,19 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        errorTextView.setText("Failed on JSONObject");
+                        //errorTextView.setText("Failed on JSONObject");
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        errorTextView.setText("Failed on JSONArray");
+                        //errorTextView.setText("Failed on JSONArray");
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         super.onFailure(statusCode, headers, responseString, throwable);
-                        errorTextView.setText("Failed on Throwable");
+                        //errorTextView.setText("Failed on Throwable");
                     }
 
                     //TODO: use this JSONObject to do things that are not fun :(
@@ -198,20 +213,34 @@ public class MainActivity extends AppCompatActivity {
 
                                 recipeObject.setNutrients(nutrients);
                                 results.add(recipeObject);
+                                adapter.notifyDataSetChanged();
                                 //errorTextView.setText("Nutrients: " + results.toString());
                             }
 
                             //mainTV.setText("Hits: " + results.toString());
-                            errorTextView.setMovementMethod(new ScrollingMovementMethod());
+                            //errorTextView.setMovementMethod(new ScrollingMovementMethod());
+                            RecyclerAdapter clickAdapter = new RecyclerAdapter(results);
+                            clickAdapter.setItemClickListener(new RecyclerAdapter.ItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+                                    // do something
+                                    Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
+                                    viewResultIntent.putExtra("RecipeSelection", results.get(position));
+                                    startActivity(viewResultIntent);
+                                }
+                            });
+                            // set the adapter for the recyclerView titled listOfRecipes
+                            recyclerView.setAdapter(clickAdapter);
+                            Toast.makeText(MainActivity.this, "Hits: " + clickAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
-                            errorTextView.setText("Hits: Error");
+                            //errorTextView.setText("Hits: Error");
                             e.printStackTrace();
                         }
                         Log.i("Json return", response.toString());
 
-                        Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
-                        viewResultIntent.putExtra("RecipeSelection", results.get(0));
-                        startActivity(viewResultIntent);
+                        //Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
+                        //viewResultIntent.putExtra("RecipeSelection", results.get(0));
+                        //startActivity(viewResultIntent);
 
                     }
 
@@ -222,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.i("API Request Fail", errorResponse.toString());
-                errorTextView.setText("API Request Fail " + statusCode);
+                //errorTextView.setText("API Request Fail " + statusCode);
             }
 
 
