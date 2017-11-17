@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView appLogo;
     private EditText userInput;
     private Button searchButton;
-    private TextView mainTV;
+    private TextView errorTextView;
 
     private ArrayList<Recipe> results;
 
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         appLogo = (ImageView)findViewById(R.id.appLogo);
         userInput = (EditText)findViewById(R.id.userInput);
         searchButton = (Button)findViewById(R.id.continueButton);
-        mainTV = (TextView)findViewById(R.id.errorTextView);
+        errorTextView = (TextView)findViewById(R.id.errorTextView);
 
         results = new ArrayList<>();
     }
@@ -111,19 +111,19 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mainTV.setText("Failed on JSONObject");
+                        errorTextView.setText("Failed on JSONObject");
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mainTV.setText("Failed on JSONArray");
+                        errorTextView.setText("Failed on JSONArray");
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         super.onFailure(statusCode, headers, responseString, throwable);
-                        mainTV.setText("Failed on Throwable");
+                        errorTextView.setText("Failed on Throwable");
                     }
 
                     //TODO: use this JSONObject to do things that are not fun :(
@@ -198,13 +198,13 @@ public class MainActivity extends AppCompatActivity {
 
                                 recipeObject.setNutrients(nutrients);
                                 results.add(recipeObject);
-                                mainTV.setText("Nutrients: " + results.toString());
+                                //errorTextView.setText("Nutrients: " + results.toString());
                             }
 
                             //mainTV.setText("Hits: " + results.toString());
-                            mainTV.setMovementMethod(new ScrollingMovementMethod());
+                            errorTextView.setMovementMethod(new ScrollingMovementMethod());
                         } catch (JSONException e) {
-                            mainTV.setText("Hits: Error");
+                            errorTextView.setText("Hits: Error");
                             e.printStackTrace();
                         }
                         Log.i("Json return", response.toString());
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.i("API Request Fail", errorResponse.toString());
-                mainTV.setText("API Request Fail " + statusCode);
+                errorTextView.setText("API Request Fail " + statusCode);
             }
 
 
