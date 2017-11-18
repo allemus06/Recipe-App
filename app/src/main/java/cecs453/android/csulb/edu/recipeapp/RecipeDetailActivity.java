@@ -1,3 +1,4 @@
+/*Marinela Sanchez*/
 package cecs453.android.csulb.edu.recipeapp;
 
 import android.content.Intent;
@@ -6,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,13 +43,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeName.setText(recipe.getLabel());
         ArrayList<String> ingredients = recipe.getIngredientLines();
         for (int i = 0; i<ingredients.size(); i++){
+            //populate text view with multiple lines
+            //https://android--examples.blogspot.com/2015/01/textview-new-line-multiline-in-android.html
             if(i == 0){
                 ingredientList.setText(ingredients.get(i));
             }
             else{
                 ingredientList.append(System.getProperty("line.separator"));
                 ingredientList.append(ingredients.get(i));
-
             }
         }
     }
@@ -56,6 +59,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeImageView = (ImageView) findViewById(R.id.recipeImageView);
         recipeName = (TextView) findViewById(R.id.recipeName);
         ingredientList = (TextView) findViewById(R.id.ingredientList);
+        ingredientList.setMovementMethod(new ScrollingMovementMethod());
 
     }
 
