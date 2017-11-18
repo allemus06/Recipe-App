@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * TODO: Add a class header comment.
+ * Created By Alejandro Lemus
  */
 
 public class Recipe implements Serializable{

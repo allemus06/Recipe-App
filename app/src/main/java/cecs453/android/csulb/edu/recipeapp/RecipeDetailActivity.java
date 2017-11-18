@@ -12,6 +12,9 @@ import android.widget.TextView;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+/**
+ * Created By Marinela Sanchez and related XML
+ */
 public class RecipeDetailActivity extends AppCompatActivity {
 
     private ImageView recipeImageView;

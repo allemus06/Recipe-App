@@ -3,7 +3,7 @@ package cecs453.android.csulb.edu.recipeapp;
 import java.io.Serializable;
 
 /**
- * TODO: Add a class header comment.
+ * Created By Alejandro Lemus
  */
 
 public class Nutrient implements Serializable{

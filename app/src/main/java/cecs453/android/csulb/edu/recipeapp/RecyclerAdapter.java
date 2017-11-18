@@ -1,6 +1,5 @@
 package cecs453.android.csulb.edu.recipeapp;
 
-import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +9,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Created by Alejandro Lemus
+ */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recyclerViewHolder>{
 
     // This is an inner class that defines the ViewHolder for each item in our RecyclerView

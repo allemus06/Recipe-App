@@ -5,7 +5,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /**
- * TODO: Add a class header comment.
+ * Created By Alejandro Lemus
  */
 
 public class EdamamClient {

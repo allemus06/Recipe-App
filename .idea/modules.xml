@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Recipe-App.iml" filepath="$PROJECT_DIR$/Recipe-App.iml" />
-      <module fileurl="file://C:\Users\Derrick\Desktop\453\FinalProject-Git\Recipe-App\Recipe-App.iml" filepath="C:\Users\Derrick\Desktop\453\FinalProject-Git\Recipe-App\Recipe-App.iml" />
-      <module fileurl="file://C:\Users\Mari S\Documents\00CECS 453\New folder\Recipe-App\RecipeApp.iml" filepath="C:\Users\Mari S\Documents\00CECS 453\New folder\Recipe-App\RecipeApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RecipeApp.iml" filepath="$PROJECT_DIR$/RecipeApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Derrick\Desktop\453\FinalProject-Git\Recipe-App\app\app.iml" filepath="C:\Users\Derrick\Desktop\453\FinalProject-Git\Recipe-App\app\app.iml" />
     </modules>
   </component>
 </project>

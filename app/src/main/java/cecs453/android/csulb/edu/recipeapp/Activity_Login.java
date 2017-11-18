@@ -21,6 +21,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Created By Alejandro Lemus and related XML
+ */
 public class Activity_Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
