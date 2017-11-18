@@ -28,7 +28,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by Aenah Ramones and Christian Ovid and related XML
+ * Created by Aenah Ramones, Christian Ovid and Alejandro Lemus and related XML
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -104,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Created by Alejandro Lemus
+     * Crated HHTP connection to get all adamam api calls and JSON parsing
+     * @param searchRecipe
+     * @param resultsRequested
+     */
     private void getHTTPConnection(String searchRecipe, int resultsRequested) {
 
         final String relativeURL = "search?q=" + searchRecipe + "&app_id=" + app_id + "&app_key=" + api_key + "&from=0&to=" + Integer.toString(resultsRequested);
