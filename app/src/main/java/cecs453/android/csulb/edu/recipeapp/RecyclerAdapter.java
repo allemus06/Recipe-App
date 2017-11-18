@@ -1,42 +1,23 @@
 package cecs453.android.csulb.edu.recipeapp;
 
-import android.support.v7.widget.CardView;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
  * Created by Alejandro Lemus
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recyclerViewHolder>{
-
-    // This is an inner class that defines the ViewHolder for each item in our RecyclerView
-    public class recyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        CardView card;
-        TextView label;
-
-        recyclerViewHolder(View itemView, ItemClickListener listener) {
-            super(itemView);
-            card = (CardView) itemView.findViewById(R.id.card);
-            label = (TextView) itemView.findViewById(R.id.label);
-            mItemClickListener = listener;
-            itemView.setOnClickListener(this);
-
-        }
-
-        // implementing an onClickListener for the ViewHolders
-        @Override
-        public void onClick(View v) {
-            if(mItemClickListener != null) {
-                mItemClickListener.onItemClick(v, getAdapterPosition());
-            }
-        }
-
-    }
 
     // Declare an instance of an ArrayList that can contain our recipe search results
     private ArrayList<Recipe> recipeSearchResults;
@@ -47,49 +28,74 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
         recipeSearchResults = recipeList;
     }
 
-    // use this method to get the number of search results
-    @Override
-    public int getItemCount() {
-        if (recipeSearchResults == null)
-            return 0;
-        else
-            return recipeSearchResults.size();
-    }
-
     // method for creating a view holder
     @Override
     public recyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_recipe, parent, false);
-        return new recyclerViewHolder(view, mItemClickListener);
+        return new recyclerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(recyclerViewHolder viewHolder, int position) {
-        // extract a search result so that we can use the information stored in it for binding
-        Recipe recipeItem = recipeSearchResults.get(position);
-
-        // this uses the getLabel() method from Recipe.java to get the label (or name) of the recipe
-        String recipeLabel = recipeItem.getLabel();
-
         // we set the text of the item in our recyclerView to whatever is stored in our label
-        viewHolder.label.setText(recipeLabel);
-
+        viewHolder.recipeNameTextView.setText(recipeSearchResults.get(position).getLabel());
+        new DownloadListImageTask(viewHolder.recipeImage).execute(recipeSearchResults.get(position).getImageLink());
     }
 
+    // use this method to get the number of search results
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+    public int getItemCount() {
+        return recipeSearchResults.size();
     }
 
-    // declare an instance of ItemClickListener
-    private ItemClickListener mItemClickListener;
+    // This is an inner class that defines the ViewHolder for each item in our RecyclerView
+    public class recyclerViewHolder extends RecyclerView.ViewHolder {
+        TextView recipeNameTextView;
+        ImageView recipeImage;
 
-    // below is the interface used for checking item clicks
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        recyclerViewHolder(final View itemView) {
+            super(itemView);
+            initSubClassViews();
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent recipeDetailsIntent = new Intent(itemView.getContext(), RecipeDetailActivity.class);
+                    recipeDetailsIntent.putExtra("RecipeSelection", recipeSearchResults.get(getPosition()));
+                    itemView.getContext().startActivity(recipeDetailsIntent);
+                }
+            });
+
+        }
+
+        private void initSubClassViews() {
+            recipeNameTextView = itemView.findViewById(R.id.recipeNameTextView);
+            recipeImage = itemView.findViewById(R.id.recipeImage);
+        }
     }
 
-    public void setItemClickListener (ItemClickListener itemClickListener) {
-        mItemClickListener = itemClickListener;
+    private class DownloadListImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadListImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... url) {
+            String urldisplay = url[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            //Bitmap resized = Bitmap.createScaledBitmap(result, 500, 500, true);
+            bmImage.setImageBitmap(result);
+        }
     }
 }

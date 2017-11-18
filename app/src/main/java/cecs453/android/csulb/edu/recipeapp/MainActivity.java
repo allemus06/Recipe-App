@@ -1,6 +1,5 @@
 package cecs453.android.csulb.edu.recipeapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,22 +39,24 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private String uid;
 
-    private ImageView appLogo;
     private EditText userInput;
     private Button searchButton;
-    //private TextView errorTextView;
-    private RecyclerView recyclerView;
 
-    RecyclerAdapter adapter;
+
+    private RecyclerView recyclerView;
+    private RecyclerAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     private ArrayList<Recipe> results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        results = new ArrayList<>();
+
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-
         initializeViews();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -65,9 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!userInput.getText().toString().isEmpty()) {
                     String searchRecipe = userInput.getText().toString();
-                    int resultsRequested = 1; // changed from amount of results to default 1
+                    int resultsRequested = 100; // changed from amount of results to default 1
                     search(searchRecipe, resultsRequested);
-
                 }
             }
         });
@@ -75,21 +73,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViews () {
-        appLogo = (ImageView)findViewById(R.id.appLogo);
         userInput = (EditText)findViewById(R.id.userInput);
         searchButton = (Button)findViewById(R.id.continueButton);
-        //errorTextView = (TextView)findViewById(R.id.errorTextView);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         // we're setting the RecyclerView to display items vertically
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        layoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
         adapter = new RecyclerAdapter(results);
         recyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-        results = new ArrayList<>();
     }
 
     private void search(String searchRecipe, int resultsRequested) {
@@ -100,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         return user != null;
-
     }
 
 
@@ -150,9 +141,6 @@ public class MainActivity extends AppCompatActivity {
                     //TODO: use this JSONObject to do things that are not fun :(
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        // If the response is JSONObject instead of expected JSONArray
-                        //mainTV.setText("Succ on first + " + response.toString());
-
                         try {
 
                             JSONArray hits = response.getJSONArray("hits");
@@ -220,34 +208,13 @@ public class MainActivity extends AppCompatActivity {
                                 recipeObject.setNutrients(nutrients);
                                 results.add(recipeObject);
                                 adapter.notifyDataSetChanged();
-                                //errorTextView.setText("Nutrients: " + results.toString());
                             }
-
-                            //mainTV.setText("Hits: " + results.toString());
-                            //errorTextView.setMovementMethod(new ScrollingMovementMethod());
                             RecyclerAdapter clickAdapter = new RecyclerAdapter(results);
-                            clickAdapter.setItemClickListener(new RecyclerAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position) {
-                                    // do something
-                                    Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
-                                    viewResultIntent.putExtra("RecipeSelection", results.get(position));
-                                    startActivity(viewResultIntent);
-                                }
-                            });
                             // set the adapter for the recyclerView titled listOfRecipes
                             recyclerView.setAdapter(clickAdapter);
-                            Toast.makeText(MainActivity.this, "Hits: " + clickAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
-                            //errorTextView.setText("Hits: Error");
                             e.printStackTrace();
                         }
-                        Log.i("Json return", response.toString());
-
-                        //Intent viewResultIntent = new Intent (MainActivity.this, RecipeDetailActivity.class);
-                        //viewResultIntent.putExtra("RecipeSelection", results.get(0));
-                        //startActivity(viewResultIntent);
-
                     }
 
                 });
@@ -259,8 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("API Request Fail", errorResponse.toString());
                 //errorTextView.setText("API Request Fail " + statusCode);
             }
-
-
 
             @Override
             public void onRetry(int retryNo) {

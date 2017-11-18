@@ -5,10 +5,12 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
 
 
     <color name="colorWhiteTransparent20">#20FFFFFF</color>
     <color name="colorWhiteTransparent60">#60FFFFFF</color>
+    <color name="colorBlackTransparent60">#CC000000</color>
     <color name="colorRedTransparent55">#55ff0000</color>
     <color name="colorTransparent">#00000000</color>
 

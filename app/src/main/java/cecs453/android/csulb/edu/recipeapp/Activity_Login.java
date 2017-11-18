@@ -159,8 +159,8 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                emailET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
-                emailClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+                emailET.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
+                emailClearButton.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
             }
 
             @Override
@@ -177,8 +177,8 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                passwordET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
-                passwordClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+                passwordET.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
+                passwordClearButton.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
             }
 
             @Override
@@ -195,8 +195,8 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                conPassET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
-                conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparent20));
+                conPassET.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
+                conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
             }
 
             @Override
