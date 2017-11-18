@@ -218,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 });
+
+                //TODO: Progress bar update
             }
 
             @Override
