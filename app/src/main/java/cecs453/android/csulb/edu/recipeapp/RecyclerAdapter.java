@@ -38,9 +38,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
     @Override
     public void onBindViewHolder(recyclerViewHolder viewHolder, int position) {
         // we set the text of the item in our recyclerView to whatever is stored in our label
-        viewHolder.recipeNameTextView.setText(recipeSearchResults.get(position).getLabel());
+        viewHolder.recipeNameTextView.setText(recipeSearchResults.get(position).getLabel()); viewHolder.recipeHealthTextView.setText(recipeSearchResults.get(position).getHealthString());
+        viewHolder.recipeServsCaloriesTV.setText("Serves " + recipeSearchResults.get(position).getYield() + " · " + Integer.toString((int)recipeSearchResults.get(position).getCalories() / recipeSearchResults.get(position).getYield()) + " calories");
         new DownloadListImageTask(viewHolder.recipeImage).execute(recipeSearchResults.get(position).getImageLink());
-    }
+       }
 
     // use this method to get the number of search results
     @Override
@@ -52,6 +53,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
     public class recyclerViewHolder extends RecyclerView.ViewHolder {
         TextView recipeNameTextView;
         ImageView recipeImage;
+        TextView recipeHealthTextView;
+        TextView recipeServsCaloriesTV;
 
         recyclerViewHolder(final View itemView) {
             super(itemView);
@@ -70,6 +73,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
         private void initSubClassViews() {
             recipeNameTextView = itemView.findViewById(R.id.recipeNameTextView);
             recipeImage = itemView.findViewById(R.id.recipeImage);
+            recipeHealthTextView = itemView.findViewById(R.id.cautionsTextView);
+            recipeServsCaloriesTV = itemView.findViewById(R.id.servsCaloriesTextView);
         }
     }
 

@@ -19,8 +19,6 @@ public class Recipe implements Serializable{
     private ArrayList<String> dietLabels;
     /** Health Labels: Vegan, peanut free, etc. */
     private ArrayList<String> healthLabels;
-    // TODO: Find out what this does
-    private ArrayList<String> cautions;
     /** String of ingredient and amount */
     private ArrayList<String> ingredientLines;
     /** Amount of calories of the recipe */
@@ -69,16 +67,16 @@ public class Recipe implements Serializable{
         return healthLabels;
     }
 
+    public String getHealthString() {
+        String ret = "";
+        for (int i = 0; i < this.healthLabels.size(); i++) {
+            ret += " ·" + this.healthLabels.get(i);
+        }
+        return ret;
+    }
+
     public void setHealthLabels(ArrayList<String> healthLabels) {
         this.healthLabels = healthLabels;
-    }
-
-    public ArrayList<String> getCautions() {
-        return cautions;
-    }
-
-    public void setCautions(ArrayList<String> cautions) {
-        this.cautions = cautions;
     }
 
     public ArrayList<String> getIngredientLines() {
@@ -121,7 +119,6 @@ public class Recipe implements Serializable{
                 ", yield=" + yield + "\n" +
                 ", dietLabels=" + dietLabels + "\n" +
                 ", healthLabels=" + healthLabels + "\n" +
-                ", cautions=" + cautions + "\n" +
                 ", ingredientLines=" + ingredientLines + "\n" +
                 ", calories=" + calories + "\n" +
                 ", totalWeight=" + totalWeight + "\n" +

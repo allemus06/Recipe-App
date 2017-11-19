@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void initializeViews () {
@@ -165,8 +164,15 @@ public class MainActivity extends AppCompatActivity {
                                 ArrayList<String> dietLabels = covertJAtoAL(recipe.getJSONArray("dietLabels"));
                                 recipeObject.setDietLabels(dietLabels);
 
-                                ArrayList<String> healthLabels = covertJAtoAL(recipe.getJSONArray("healthLabels"));
-                                recipeObject.setHealthLabels(healthLabels);
+                                if (recipe.has("healthLabels")) {
+                                    ArrayList<String> healthLabels = covertJAtoAL(recipe.getJSONArray("healthLabels"));
+                                    recipeObject.setHealthLabels(healthLabels);
+                                } else {
+                                    ArrayList<String> healthLabels = new ArrayList<>();
+                                    recipeObject.setHealthLabels(healthLabels);
+                                }
+
+
 
                                 ArrayList<String> ingredientLines = covertJAtoAL(recipe.getJSONArray("ingredientLines"));
                                 recipeObject.setIngredientLines(ingredientLines);
