@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecipeApp</string>
+    <string name="app_name">Recipe App</string>
     <string name="user_input"><i>Enter name of food...</i></string>
     <string name="ingredients">Ingredients</string>
 </resources>

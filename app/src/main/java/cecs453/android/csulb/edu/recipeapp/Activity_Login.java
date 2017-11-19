@@ -159,8 +159,9 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                emailET.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
-                emailClearButton.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
+                emailET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparentAA));
+                emailClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparentAA));
+                emailET.setTextColor(getResources().getColor(R.color.colorBlackTransparent60));
             }
 
             @Override
@@ -177,8 +178,9 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                passwordET.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
-                passwordClearButton.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
+                passwordET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparentAA));
+                passwordClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparentAA));
+                passwordET.setTextColor(getResources().getColor(R.color.colorBlackTransparent60));
             }
 
             @Override
@@ -195,8 +197,9 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                conPassET.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
-                conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorBlackTransparent60));
+                conPassET.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparentAA));
+                conPassClearButton.setBackgroundColor(getResources().getColor(R.color.colorWhiteTransparentAA));
+                conPassET.setTextColor(getResources().getColor(R.color.colorBlackTransparent60));
             }
 
             @Override
@@ -302,7 +305,7 @@ public class Activity_Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.i("Account", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(Activity_Login.this, "Login Successful for " + user.getEmail().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Activity_Login.this, "Login Successful for " + user.getEmail().toString(), Toast.LENGTH_SHORT).show();
 
                             Intent mainActivityIntent = new Intent(Activity_Login.this, MainActivity.class);
                             startActivity(mainActivityIntent);

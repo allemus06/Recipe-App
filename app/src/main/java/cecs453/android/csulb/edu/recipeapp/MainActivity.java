@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText userInput;
     private Button searchButton;
-
+    private ProgressBar progressBar;
 
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private ArrayList<Recipe> results;
+    private int prog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         initializeViews();
+        progressBar.setVisibility(View.INVISIBLE);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeViews () {
         userInput = (EditText)findViewById(R.id.userInput);
         searchButton = (Button)findViewById(R.id.continueButton);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         // we're setting the RecyclerView to display items vertically
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -94,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         return user != null;
     }
 
-
     /**
      * Created by Alejandro Lemus
      * Crated HHTP connection to get all adamam api calls and JSON parsing
@@ -111,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStart() {
                 // called before request is started
-                //TODO: Add progress bar start
+                prog = 0;
+                progressBar.setProgress(prog);
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -123,19 +128,19 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        //errorTextView.setText("Failed on JSONObject");
+                        Toast.makeText(getApplicationContext(), "Search Failed :(", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        //errorTextView.setText("Failed on JSONArray");
+                        Toast.makeText(getApplicationContext(), "Search Failed :(", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         super.onFailure(statusCode, headers, responseString, throwable);
-                        //errorTextView.setText("Failed on Throwable");
+                        Toast.makeText(getApplicationContext(), "Search Failed :(", Toast.LENGTH_SHORT).show();
                     }
 
                     //TODO: use this JSONObject to do things that are not fun :(
@@ -218,14 +223,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 });
-
-                //TODO: Progress bar update
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.i("API Request Fail", errorResponse.toString());
+                Toast.makeText(getApplicationContext(), "Search Failed :( - " + statusCode, Toast.LENGTH_SHORT).show();
                 //errorTextView.setText("API Request Fail " + statusCode);
             }
 
@@ -234,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
                 // called when request is retried
             }
         });
-
     }
 
     private void addNutrient(String jsonTag, JSONObject totalNutrients, HashMap<String, Nutrient> nutrients) throws JSONException {
