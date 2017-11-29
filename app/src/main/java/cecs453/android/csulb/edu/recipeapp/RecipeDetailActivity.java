@@ -22,7 +22,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ImageView recipeImageView;
     private TextView recipeName;
     private TextView ingredientList;
-
     private Recipe recipe;
 
     @Override

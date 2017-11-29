@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">Recipe App</string>
+    <string name="app_name">Munchies</string>
     <string name="user_input"><i>Enter name of food...</i></string>
     <string name="ingredients">Ingredients</string>
+
+    <string-array name="navigation_drawer_items_array">
+        <item>Search Recipe</item>
+        <item>Find Nearest Store</item>
+        <item>Favorites</item>
+    </string-array>
 </resources>
