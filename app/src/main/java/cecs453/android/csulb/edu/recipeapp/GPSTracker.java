@@ -3,7 +3,6 @@ package cecs453.android.csulb.edu.recipeapp;
 /**
  * Created by aenah on 11/29/17.
  */
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
