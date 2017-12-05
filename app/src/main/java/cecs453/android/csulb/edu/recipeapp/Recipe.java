@@ -28,6 +28,9 @@ public class Recipe implements Serializable{
     /** The nutrient hashmap of the recipe */
     private HashMap<String, Nutrient> nutrients;
 
+    /** URI of the recipe resource */
+    private String recipeURI;
+
     public Recipe() {
     }
 
@@ -109,6 +112,16 @@ public class Recipe implements Serializable{
 
     public void setNutrients(HashMap<String, Nutrient> nutrients) {
         this.nutrients = nutrients;
+    }
+
+    /** get recipe uri */
+    public String getRecipeURI() {
+        return recipeURI;
+    }
+
+    /** set recipe uri */
+    public void setRecipeURI(String recipeURI) {
+        this.recipeURI= recipeURI;
     }
 
     @Override

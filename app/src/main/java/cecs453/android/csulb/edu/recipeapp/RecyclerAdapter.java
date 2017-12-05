@@ -9,13 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
- * Created by Alejandro Lemus
+ * Created by Christian Ovid and Alejandro Lemus
+ * Description: This is the adapter used for the recyclerView component.
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recyclerViewHolder>{
 
@@ -55,6 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
         ImageView recipeImage;
         TextView recipeHealthTextView;
         TextView recipeServsCaloriesTV;
+        RatingBar ratingBarList;
 
         recyclerViewHolder(final View itemView) {
             super(itemView);
@@ -75,6 +78,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
             recipeImage = itemView.findViewById(R.id.recipeImage);
             recipeHealthTextView = itemView.findViewById(R.id.cautionsTextView);
             recipeServsCaloriesTV = itemView.findViewById(R.id.servsCaloriesTextView);
+            ratingBarList = itemView.findViewById(R.id.ratingBarListItem);
         }
     }
 
