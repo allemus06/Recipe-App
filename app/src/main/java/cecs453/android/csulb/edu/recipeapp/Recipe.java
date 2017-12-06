@@ -31,6 +31,9 @@ public class Recipe implements Serializable{
     /** URI of the recipe resource */
     private String recipeURI;
 
+    /** recipe rating */
+    private float rating;
+
     public Recipe() {
     }
 
@@ -107,12 +110,16 @@ public class Recipe implements Serializable{
     }
 
     public String getRecipeURI() {
-        return recipeURI;
+        return recipeURI.substring(recipeURI.indexOf('#') + 1);
     }
 
     public void setRecipeURI(String recipeURI) {
         this.recipeURI = recipeURI;
     }
+
+    public float getRating() { return rating; }
+
+    public void setRating(float rating) { this.rating = rating;}
 
     public String getHealthString() {
         String ret = "";

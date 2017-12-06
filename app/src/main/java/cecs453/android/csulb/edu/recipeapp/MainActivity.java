@@ -21,6 +21,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -56,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private RecyclerAdapter clickAdapter;
 
     private ArrayList<Recipe> results;
     private int prog;
@@ -72,9 +78,16 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     /**/
 
+    private float totalRating;
+    private int noOfRatings;
+    private DatabaseReference mDatabaseRatings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //initialize the database reference that we will be using for getting ratings
+        mDatabaseRatings = FirebaseDatabase.getInstance().getReference("ratings");
 
         // initialize results as a new ArrayList to store our search results
         results = new ArrayList<>();
@@ -196,11 +209,14 @@ public class MainActivity extends AppCompatActivity {
                     //TODO: use this JSONObject to do things that are not fun :(
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        clickAdapter = new RecyclerAdapter(null);
+                        results.clear();
+                        clickAdapter.notifyDataSetChanged();
                         try {
 
                             JSONArray hits = response.getJSONArray("hits");
                             for (int i = 0; i < hits.length(); i++) {
-                                Recipe recipeObject = new Recipe();
+                                final Recipe recipeObject = new Recipe();
                                 JSONObject recipe = hits.getJSONObject(i).getJSONObject("recipe");
 
                                 String label = recipe.getString("label");
@@ -209,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                                 String imgSource = recipe.getString("image");
                                 recipeObject.setImageLink(imgSource);
 
-                                // recipe URL
+                                // recipe URI
                                 String recipeSource = recipe.getString("uri");
                                 recipeObject.setRecipeURI(recipeSource);
 
@@ -227,7 +243,24 @@ public class MainActivity extends AppCompatActivity {
                                     recipeObject.setHealthLabels(healthLabels);
                                 }
 
+                                // get the average rating of the recipe if there are ratings in the database
+                                mDatabaseRatings.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.child(recipeObject.getRecipeURI()).exists()) {
+                                            totalRating = dataSnapshot.child(recipeObject.getRecipeURI()).child("totalRating").getValue(Float.class);
+                                            noOfRatings = dataSnapshot.child(recipeObject.getRecipeURI()).child("noOfRatings").getValue(Integer.class);
+                                            recipeObject.setRating(totalRating/noOfRatings);
+                                        }
+                                        else
+                                            recipeObject.setRating(0);
+                                    }
 
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
 
                                 ArrayList<String> ingredientLines = covertJAtoAL(recipe.getJSONArray("ingredientLines"));
                                 recipeObject.setIngredientLines(ingredientLines);

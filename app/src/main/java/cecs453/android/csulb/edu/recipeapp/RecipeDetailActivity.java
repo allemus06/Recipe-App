@@ -80,7 +80,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         // get the uri of the recipe so that we can use it as a key in our ratings database
         uri = recipe.getRecipeURI();
-        uri = uri.substring(uri.indexOf('#') + 1);
 
         // this was added for testing purposes
         recipeURI.setText(uri);
@@ -143,7 +142,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
 
         uri = recipe.getRecipeURI();
-        uri = uri.substring(uri.indexOf('#') + 1);
 
         // get the average rating of the recipe if there are ratings in the database
         mDatabaseRatings.addListenerForSingleValueEvent(new ValueEventListener() {
