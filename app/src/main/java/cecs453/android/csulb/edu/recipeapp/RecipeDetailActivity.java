@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,8 +29,12 @@ import java.util.ArrayList;
 
 /**
  * Created By Marinela Sanchez and related XML
+ * Additions by Christian Ovid and Alejandro Lemus
  */
 public class RecipeDetailActivity extends AppCompatActivity {
+
+    // get the current user of our app so that we can validate and access their information
+    FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
     private ImageView recipeImageView;
     private TextView recipeName;
@@ -37,7 +43,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private Recipe recipe;
 
     // A database reference for handling ratings data in our firebase database
+    private DatabaseReference dataBaseRoot;
     private DatabaseReference mDatabaseRatings;
+    private DatabaseReference mUserRatings;
     private DatabaseReference mRecipeReference;
     private DatabaseReference favoriteReference;
 
@@ -49,7 +57,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private String uri;
     private float totalRating;
     private int noOfRatings;
+    private float initialUserRating;
+    private float changedUserRating;
     private boolean favorite;
+    private boolean userRatingExisted;
 
     // this was added for testing purposes by Chris
     private TextView recipeURI;
@@ -63,8 +74,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        //initialize the database reference that we will be using
+        //initialize the database references that we will be using
+        dataBaseRoot = FirebaseDatabase.getInstance().getReference();
         mDatabaseRatings = FirebaseDatabase.getInstance().getReference("ratings");
+        mUserRatings = FirebaseDatabase.getInstance().getReference("users");
         favoriteReference = FirebaseDatabase.getInstance().getReference(DB_FAVORITE);
 
         Intent intent = getIntent();
@@ -78,7 +91,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // get the uri of the recipe so that we can use it as a key in our ratings database
+        // get the uri of the recipe so that we can use it as a key in our ratings/favorites database
         uri = recipe.getRecipeURI();
 
         // this was added for testing purposes
@@ -88,29 +101,47 @@ public class RecipeDetailActivity extends AppCompatActivity {
         //    send the rating to the database
         recipeRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, final boolean fromUser) {
+            public void onRatingChanged(RatingBar ratingBar, final float rating, final boolean fromUser) {
                 // create an instance of a rating for the user's rating
                 final Rating userRating = new Rating(uri, rating, 1);
 
-                mDatabaseRatings.addListenerForSingleValueEvent(new ValueEventListener() {
+                //this is the listener for the user's private ratings data and the public ratings data
+                dataBaseRoot.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child(uri).exists() && fromUser) {
-                            // if the recipe exists in the ratings section of firebase, just add to the
-                            //    total rating value under 'ratings' and increment no. of ratings by 1
-                            mRecipeReference = mDatabaseRatings.child(uri);
-                            mRecipeReference.child("noOfRatings").setValue(dataSnapshot.child(uri)
-                                    .child("noOfRatings").getValue(Integer.class) + 1);
-                            mRecipeReference.child("totalRating").setValue(dataSnapshot.child(uri)
-                                    .child("totalRating").getValue(Float.class)
-                                    + userRating.getTotalRating());
-                        } else if(!dataSnapshot.child(uri).exists()){
-                            // else if the recipe does not exist under the ratings section of firebase,
-                            //    add the recipe to the ratings section and set the rating value to the
-                            //        input rating and set the no. of ratings to 1
-                            // this adds a child node under "ratings" in our database with the recipe's uri
-                            //    along with its very first rating
-                            mDatabaseRatings.child(uri).setValue(userRating);
+                        mRecipeReference = mDatabaseRatings.child(uri);
+                        // if the user has a rating for this recipe already, go ahead and update it
+                        if(dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists() && fromUser) {
+                            initialUserRating = dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).getValue(Float.class);
+                            mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
+                                    .setValue(rating);
+                            changedUserRating = rating;
+                            // if the user is changing their rating
+                            if(initialUserRating > changedUserRating) {
+                                mRecipeReference.child("totalRating").setValue(dataSnapshot.child("ratings").child(uri)
+                                        .child("totalRating").getValue(Float.class)
+                                        - (initialUserRating - changedUserRating));
+                            } else if(initialUserRating < changedUserRating) {
+                                mRecipeReference.child("totalRating").setValue(dataSnapshot.child("ratings").child(uri)
+                                        .child("totalRating").getValue(Float.class)
+                                        + (changedUserRating - initialUserRating));
+                            }
+                        } else if((!dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists()) && fromUser) {
+                            mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
+                                    .setValue(rating);
+                            // if the recipe exists in the ratings section of firebase and is a new
+                            //    unaltered rating from the user, just add to the
+                            //        total rating value under 'ratings' and increment no. of ratings by 1
+                            if(dataSnapshot.child("ratings").child(uri).exists()) {
+                                mRecipeReference.child("noOfRatings").setValue(dataSnapshot.child("ratings").child(uri)
+                                        .child("noOfRatings").getValue(Integer.class) + 1);
+                                mRecipeReference.child("totalRating").setValue(dataSnapshot.child("ratings").child(uri)
+                                        .child("totalRating").getValue(Float.class)
+                                        + userRating.getTotalRating());
+                            } else if (!dataSnapshot.child("ratings").child(uri).exists()){
+                                // a rating does not exist in the public ratings database
+                                mDatabaseRatings.child(uri).setValue(userRating);
+                            }
                         }
                     }
 
@@ -144,12 +175,15 @@ public class RecipeDetailActivity extends AppCompatActivity {
         uri = recipe.getRecipeURI();
 
         // get the average rating of the recipe if there are ratings in the database
-        mDatabaseRatings.addListenerForSingleValueEvent(new ValueEventListener() {
+        dataBaseRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(uri).exists()) {
-                    totalRating = dataSnapshot.child(uri).child("totalRating").getValue(Float.class);
-                    noOfRatings = dataSnapshot.child(uri).child("noOfRatings").getValue(Integer.class);
+                if(dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists()) {
+                    initialUserRating = dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).getValue(Float.class);
+                    recipeRatingBar.setRating(initialUserRating);
+                } else if(dataSnapshot.child("ratings").child(uri).exists()) {
+                    totalRating = dataSnapshot.child("ratings").child(uri).child("totalRating").getValue(Float.class);
+                    noOfRatings = dataSnapshot.child("ratings").child(uri).child("noOfRatings").getValue(Integer.class);
                     recipeRatingBar.setRating(totalRating/noOfRatings);
                 }
             }
