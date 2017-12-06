@@ -4,6 +4,9 @@ package cecs453.android.csulb.edu.recipeapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -60,7 +63,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private float initialUserRating;
     private float changedUserRating;
     private boolean favorite;
-    private boolean userRatingExisted;
 
     // this was added for testing purposes by Chris
     private TextView recipeURI;
@@ -126,6 +128,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                                         .child("totalRating").getValue(Float.class)
                                         + (changedUserRating - initialUserRating));
                             }
+                            LayerDrawable stars = (LayerDrawable) recipeRatingBar.getProgressDrawable();
+                            stars.getDrawable(2).setColorFilter(Color.parseColor("#FDD017"), PorterDuff.Mode.SRC_ATOP);
                         } else if((!dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists()) && fromUser) {
                             mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
                                     .setValue(rating);
@@ -142,6 +146,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                                 // a rating does not exist in the public ratings database
                                 mDatabaseRatings.child(uri).setValue(userRating);
                             }
+                            LayerDrawable stars = (LayerDrawable) recipeRatingBar.getProgressDrawable();
+                            stars.getDrawable(2).setColorFilter(Color.parseColor("#FDD017"), PorterDuff.Mode.SRC_ATOP);
                         }
                     }
 
@@ -181,6 +187,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 if(dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists()) {
                     initialUserRating = dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).getValue(Float.class);
                     recipeRatingBar.setRating(initialUserRating);
+                    LayerDrawable stars = (LayerDrawable) recipeRatingBar.getProgressDrawable();
+                    stars.getDrawable(2).setColorFilter(Color.parseColor("#FDD017"), PorterDuff.Mode.SRC_ATOP);
                 } else if(dataSnapshot.child("ratings").child(uri).exists()) {
                     totalRating = dataSnapshot.child("ratings").child(uri).child("totalRating").getValue(Float.class);
                     noOfRatings = dataSnapshot.child("ratings").child(uri).child("noOfRatings").getValue(Integer.class);
