@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         setupDrawerToggle();
     }
 
+
     private void initializeViews () {
         userInput = (EditText)findViewById(R.id.userInput);
         searchButton = (Button)findViewById(R.id.continueButton);
