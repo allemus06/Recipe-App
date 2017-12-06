@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         results = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
+
 //        getSupportActionBar().hide();
         initializeViews();
         progressBar.setVisibility(View.INVISIBLE);

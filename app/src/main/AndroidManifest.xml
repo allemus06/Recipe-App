@@ -14,7 +14,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/recipeapp_logo"
-        android:label=""
+        android:label="Munchies"
         android:roundIcon="@drawable/recipeapp_logo"
         android:supportsRtl="true"
         android:theme="@style/ActionBar"
@@ -28,7 +28,7 @@
         <activity
             android:theme="@style/AppTheme"
             android:name=".Activity_Login"
-            android:label="Login">
+            android:label="Munchies">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,5 +54,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
 
 </manifest>
