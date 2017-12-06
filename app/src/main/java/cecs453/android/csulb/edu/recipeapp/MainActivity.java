@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // initialize results as a new ArrayList to store our search results
         results = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
@@ -206,6 +207,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 String imgSource = recipe.getString("image");
                                 recipeObject.setImageLink(imgSource);
+
+                                // recipe URL
+                                String recipeSource = recipe.getString("uri");
+                                recipeObject.setRecipeURI(recipeSource);
 
                                 int yield = recipe.getInt("yield");
                                 recipeObject.setYield(yield);

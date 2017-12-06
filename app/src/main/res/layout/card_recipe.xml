@@ -59,6 +59,16 @@
             android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@+id/recipeImage"
             app:layout_constraintTop_toBottomOf="@+id/recipeNameTextView" />
+
+        <RatingBar
+            android:id="@+id/ratingBarListItem"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toEndOf="@+id/recipeImage"
+            app:layout_constraintTop_toBottomOf="@+id/servsCaloriesTextView" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
