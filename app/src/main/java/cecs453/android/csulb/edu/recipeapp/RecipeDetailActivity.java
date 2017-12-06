@@ -6,8 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,11 +33,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ImageView recipeImageView;
     private TextView recipeName;
     private TextView ingredientList;
+    private Button favoriteButton;
     private Recipe recipe;
 
     // A database reference for handling ratings data in our firebase database
     private DatabaseReference mDatabaseRatings;
     private DatabaseReference mRecipeReference;
+    private DatabaseReference favoriteReference;
 
     // this rating bar will display either the user's rating
     //    if the user has not rated the recipe, then display the average rating
@@ -43,9 +49,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private String uri;
     private float totalRating;
     private int noOfRatings;
+    private boolean favorite;
 
     // this was added for testing purposes by Chris
     private TextView recipeURI;
+
+    private String DB_FAVORITE = "Favorites";
+    Gson gson;
+    String json;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +65,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         //initialize the database reference that we will be using
         mDatabaseRatings = FirebaseDatabase.getInstance().getReference("ratings");
+        favoriteReference = FirebaseDatabase.getInstance().getReference(DB_FAVORITE);
 
         Intent intent = getIntent();
         recipe = (Recipe)intent.getSerializableExtra("RecipeSelection");
@@ -150,12 +162,78 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         });
 
+        gson = new Gson();
+        json = gson.toJson(recipe);
+
+        //Checks if a recipe is already a favorite
+        final String recpipeID = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
+        favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(recpipeID)) {
+                    favorite = true;
+                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGold));
+                } else {
+                    favorite = false;
+                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBackgroundLight));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (favorite) {
+                    //Currently favorite
+                    favorite = false;
+                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBackgroundLight));
+                    favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // get the uri of the recipe so that we can use it as a key in our ratings database
+                            uri = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
+                            favoriteReference.child(uri).removeValue();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    //Currently NOT favorite
+                    favorite = true;
+                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGold));
+                    favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // get the uri of the recipe so that we can use it as a key in our ratings database
+                            String uri = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
+                            favoriteReference.child(uri).setValue(json);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+
     }
 
     private void initializeViews() {
         recipeImageView = (ImageView) findViewById(R.id.recipeImageView);
         recipeName = (TextView) findViewById(R.id.recipeName);
         ingredientList = (TextView) findViewById(R.id.ingredientList);
+        favoriteButton = findViewById(R.id.favoriteButton);
         ingredientList.setMovementMethod(new ScrollingMovementMethod());
 
         recipeRatingBar = (RatingBar) findViewById(R.id.ratingBarDetail);
