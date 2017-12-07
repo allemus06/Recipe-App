@@ -2,6 +2,9 @@
     <string name="app_name">Munchies</string>
     <string name="user_input"><i>Enter name of food...</i></string>
     <string name="ingredients">Ingredients</string>
+    <string name="open_recipe">Get Recipe</string>
+    <string name="calories">Calories : </string>
+    <string name="yield">Yields: </string>
 
     <string-array name="navigation_drawer_items_array">
         <item>Search Recipe</item>

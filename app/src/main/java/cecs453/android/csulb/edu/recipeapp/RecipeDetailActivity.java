@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created By Marinela Sanchez and related XML
@@ -42,7 +44,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ImageView recipeImageView;
     private TextView recipeName;
     private TextView ingredientList;
+    private TextView calorieVal;
+    private TextView yieldVal;
     private Button favoriteButton;
+    private Button getRecipe;
     private Recipe recipe;
 
     // A database reference for handling ratings data in our firebase database
@@ -100,7 +105,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         URL = recipe.getRecipeURL();
 
         // this was added for testing purposes
-        recipeURL.setText(URL);
+        //recipeURL.setText(URL);
 
         // when the user sets their own personal rating,
         //    send the rating to the database
@@ -165,22 +170,55 @@ public class RecipeDetailActivity extends AppCompatActivity {
         });
     }
 
+    public void openRecipe(View view){
+        String recipeLink = recipe.getRecipeURL();
+        Uri site = Uri.parse(recipeLink);
+        Intent selection = new Intent();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, site);
+
+        if(browserIntent.resolveActivity(getPackageManager())!=null){
+            startActivity(browserIntent);
+        }
+    }
+
     private void populateViews() {
         //Set Recipe image
         new DownloadImageTask(recipeImageView).execute(recipe.getImageLink());
         recipeName.setText(recipe.getLabel());
         ArrayList<String> ingredients = recipe.getIngredientLines();
+        ArrayList<String> healthLabels = recipe.getHealthLabels();
+        HashMap<String, Nutrient> nutrients = recipe.getNutrients();
+        calorieVal.setText(Double.toString(Math.round(recipe.getCalories())));
+        yieldVal.setText(Integer.toString(recipe.getYield()));
+
+        ingredientList.setText("Ingredients");
+
         for (int i = 0; i<ingredients.size(); i++){
             //populate text view with multiple lines
             //https://android--examples.blogspot.com/2015/01/textview-new-line-multiline-in-android.html
-            if(i == 0){
-                ingredientList.setText(ingredients.get(i));
-            }
-            else{
                 ingredientList.append(System.getProperty("line.separator"));
                 ingredientList.append(ingredients.get(i));
-            }
+
         }
+
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append("Health Labels: ");
+        for (int j = 0; j<healthLabels.size(); j++){
+            ingredientList.append(System.getProperty("line.separator"));
+            ingredientList.append(healthLabels.get(j));
+        }
+
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append("Nutrients: ");
+        for(Nutrient nutrientInfo: nutrients.values()){
+            ingredientList.append(System.getProperty("line.separator"));
+            ingredientList.append(nutrientInfo.toString());
+        }
+
+
+
 
         uri = recipe.getRecipeURI();
 
@@ -275,13 +313,15 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeImageView = (ImageView) findViewById(R.id.recipeImageView);
         recipeName = (TextView) findViewById(R.id.recipeName);
         ingredientList = (TextView) findViewById(R.id.ingredientList);
+        calorieVal = (TextView) findViewById(R.id.caloriesVal);
+        yieldVal = (TextView) findViewById(R.id.yieldVal);
         favoriteButton = findViewById(R.id.favoriteButton);
         ingredientList.setMovementMethod(new ScrollingMovementMethod());
 
         recipeRatingBar = (RatingBar) findViewById(R.id.ratingBarDetail);
 
         // added for testing purposes
-        recipeURL = (TextView) findViewById(R.id.textViewURL);
+        //recipeURL = (TextView) findViewById(R.id.textViewURL);
 
     }
 
