@@ -1,7 +1,7 @@
 package cecs453.android.csulb.edu.recipeapp;
 
 /**
- * Created by aenah on 11/27/17.
+ * Created by Aenah Ramones for Custom Navigation Drawer.
  */
 
 import android.app.Activity;

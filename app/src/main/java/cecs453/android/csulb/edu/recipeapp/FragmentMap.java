@@ -1,7 +1,7 @@
 package cecs453.android.csulb.edu.recipeapp;
 
 /**
- * Created by aenah on 11/28/17.
+ * Created by Aenah Ramones with related XML.
  */
 import android.Manifest;
 import android.app.AlertDialog;
@@ -420,7 +420,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
 
                 markerOptions.title(name + " : " + vicinity);
 
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                 // Placing a marker on the touched position
                 Marker m = mMap.addMarker(markerOptions);

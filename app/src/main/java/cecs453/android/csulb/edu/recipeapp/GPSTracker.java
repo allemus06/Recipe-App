@@ -1,7 +1,7 @@
 package cecs453.android.csulb.edu.recipeapp;
 
 /**
- * Created by aenah on 11/29/17.
+ * Page created by Aenah (taken from the relevant lab in class).
  */
 import android.Manifest;
 import android.annotation.SuppressLint;

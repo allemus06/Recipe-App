@@ -5,7 +5,8 @@
 
     <string-array name="navigation_drawer_items_array">
         <item>Search Recipe</item>
-        <item>Find Nearest Store</item>
+        <item>Find Nearest Stores</item>
         <item>Favorites</item>
+        <item>FAQ</item>
     </string-array>
 </resources>

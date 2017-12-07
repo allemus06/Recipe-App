@@ -103,11 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        DataModel[] drawerItem = new DataModel[3];
+        DataModel[] drawerItem = new DataModel[4];
 
         drawerItem[0] = new DataModel(R.drawable.search_icon, "Search Recipe");
-        drawerItem[1] = new DataModel(R.drawable.ic_action_name, "Find Grocery Store");
+        drawerItem[1] = new DataModel(R.drawable.ic_action_name, "Find Nearest Stores");
         drawerItem[2] = new DataModel(R.drawable.heart_icon, "Favorites");
+        drawerItem[3] = new DataModel(R.drawable.question_icon, "FAQ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -354,6 +355,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 2:
                 fragment = new FragmentFavorites();
+                break;
+            case 3:
+                fragment = new FragmentFAQ();
                 break;
             default:
                 break;

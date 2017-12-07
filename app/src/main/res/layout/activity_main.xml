@@ -51,7 +51,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/continueButton"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="UnknownId" />
+                    tools:ignore="UnknownId"
+                    android:maxLines="1"/>
 
                 <Button
                     android:id="@+id/continueButton"
