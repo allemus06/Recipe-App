@@ -169,7 +169,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         });
     }
-
+    //Opens browser  with the link to the recipe
     public void openRecipe(View view){
         String recipeLink = recipe.getRecipeURL();
         Uri site = Uri.parse(recipeLink);
@@ -180,7 +180,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             startActivity(browserIntent);
         }
     }
-
+    //Displays the ingredients of the recipe, health labels, and nutrients in the scroll view
     private void populateViews() {
         //Set Recipe image
         new DownloadImageTask(recipeImageView).execute(recipe.getImageLink());
