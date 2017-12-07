@@ -1,10 +1,10 @@
 # Munchies
 
 ## Original Project Idea
-	This project is to create an Android application which the user could use as a guide to cook. The goal of the application is to simplify the meal choice by using only the ingredients found at home. The user will input the ingredients readily available, input some restrictions; such as low fat, high calories, etc, and the application will display recipes which use the available ingredients and restrictions.
+This project is to create an Android application which the user could use as a guide to cook. The goal of the application is to simplify the meal choice by using only the ingredients found at home. The user will input the ingredients readily available, input some restrictions; such as low fat, high calories, etc, and the application will display recipes which use the available ingredients and restrictions.
 
 ## Project Description: 
-	Munchies is a food application that serves as a quick and convenient collection of recipes in your pocket. The user is able to register in the application so that data such as their favorite recipes can be saved with their user id. The main function of the application is the recipe search feature in which a regularly updated collection of recipes can be sorted through using any keywords that a user might use. Each of the recipes can have a rating - and the average rating over the number of user ratings will be taken into account. Munchies also provides a way to find the nearest grocery stores from your location for a user’s convenience.
+Munchies is a food application that serves as a quick and convenient collection of recipes in your pocket. The user is able to register in the application so that data such as their favorite recipes can be saved with their user id. The main function of the application is the recipe search feature in which a regularly updated collection of recipes can be sorted through using any keywords that a user might use. Each of the recipes can have a rating - and the average rating over the number of user ratings will be taken into account. Munchies also provides a way to find the nearest grocery stores from your location for a user’s convenience.
 
 ## Prerequisites:
 * Android phone/emulator	
