@@ -31,15 +31,10 @@ public class Recipe implements Serializable{
     /** URI of the recipe resource */
     private String recipeURI;
 
+    /** recipe rating */
+    private float rating;
+
     public Recipe() {
-    }
-
-    public ArrayList<String> getDietLabels() {
-        return dietLabels;
-    }
-
-    public void setDietLabels(ArrayList<String> dietLabels) {
-        this.dietLabels = dietLabels;
     }
 
     public String getLabel() {
@@ -66,16 +61,16 @@ public class Recipe implements Serializable{
         this.yield = yield;
     }
 
-    public ArrayList<String> getHealthLabels() {
-        return healthLabels;
+    public ArrayList<String> getDietLabels() {
+        return dietLabels;
     }
 
-    public String getHealthString() {
-        String ret = "";
-        for (int i = 0; i < this.healthLabels.size(); i++) {
-            ret += " ·" + this.healthLabels.get(i);
-        }
-        return ret;
+    public void setDietLabels(ArrayList<String> dietLabels) {
+        this.dietLabels = dietLabels;
+    }
+
+    public ArrayList<String> getHealthLabels() {
+        return healthLabels;
     }
 
     public void setHealthLabels(ArrayList<String> healthLabels) {
@@ -114,14 +109,24 @@ public class Recipe implements Serializable{
         this.nutrients = nutrients;
     }
 
-    /** get recipe uri */
     public String getRecipeURI() {
-        return recipeURI;
+        return recipeURI.substring(recipeURI.indexOf('#') + 1);
     }
 
-    /** set recipe uri */
     public void setRecipeURI(String recipeURI) {
-        this.recipeURI= recipeURI;
+        this.recipeURI = recipeURI;
+    }
+
+    public float getRating() { return rating; }
+
+    public void setRating(float rating) { this.rating = rating;}
+
+    public String getHealthString() {
+        String ret = "";
+        for (int i = 0; i < this.healthLabels.size(); i++) {
+            ret += " ·" + this.healthLabels.get(i);
+        }
+        return ret;
     }
 
     @Override

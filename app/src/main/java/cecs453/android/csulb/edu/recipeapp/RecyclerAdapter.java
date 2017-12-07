@@ -42,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recycl
         // we set the text of the item in our recyclerView to whatever is stored in our label
         viewHolder.recipeNameTextView.setText(recipeSearchResults.get(position).getLabel()); viewHolder.recipeHealthTextView.setText(recipeSearchResults.get(position).getHealthString());
         viewHolder.recipeServsCaloriesTV.setText("Serves " + recipeSearchResults.get(position).getYield() + " · " + Integer.toString((int)recipeSearchResults.get(position).getCalories() / recipeSearchResults.get(position).getYield()) + " calories");
-        new DownloadListImageTask(viewHolder.recipeImage).execute(recipeSearchResults.get(position).getImageLink());
+        new DownloadListImageTask(viewHolder.recipeImage).execute(recipeSearchResults.get(position).getImageLink()); viewHolder.ratingBarList.setRating(recipeSearchResults.get(position).getRating());
        }
 
     // use this method to get the number of search results
