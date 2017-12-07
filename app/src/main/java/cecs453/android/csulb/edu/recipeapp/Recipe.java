@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 /**
  * Created By Alejandro Lemus
+ * Additions by Christian Ovid
  */
 
 public class Recipe implements Serializable{
@@ -30,6 +31,9 @@ public class Recipe implements Serializable{
 
     /** URI of the recipe resource */
     private String recipeURI;
+
+    /** URL of the recipe resource */
+    private String recipeURL;
 
     /** recipe rating */
     private float rating;
@@ -116,6 +120,12 @@ public class Recipe implements Serializable{
     public void setRecipeURI(String recipeURI) {
         this.recipeURI = recipeURI;
     }
+
+    public String getRecipeURL() {
+        return recipeURL;
+    }
+
+    public void setRecipeURL(String recipeURL) { this.recipeURL = recipeURL; }
 
     public float getRating() { return rating; }
 

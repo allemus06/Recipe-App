@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created By Marinela Sanchez and related XML
@@ -42,15 +44,17 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ImageView recipeImageView;
     private TextView recipeName;
     private TextView ingredientList;
+    private TextView calorieVal;
+    private TextView yieldVal;
     private Button favoriteButton;
+    private Button getRecipe;
     private Recipe recipe;
 
     // A database reference for handling ratings data in our firebase database
     private DatabaseReference dataBaseRoot;
     private DatabaseReference mDatabaseRatings;
-    private DatabaseReference mUserRatings;
+    private DatabaseReference mUsers;
     private DatabaseReference mRecipeReference;
-    private DatabaseReference favoriteReference;
 
     // this rating bar will display either the user's rating
     //    if the user has not rated the recipe, then display the average rating
@@ -58,6 +62,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     // uri of the recipe used for identifying the recipe in the database
     private String uri;
+    // the original url of the recipe
+    private String URL;
     private float totalRating;
     private int noOfRatings;
     private float initialUserRating;
@@ -65,7 +71,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private boolean favorite;
 
     // this was added for testing purposes by Chris
-    private TextView recipeURI;
+    private TextView recipeURL;
 
     private String DB_FAVORITE = "Favorites";
     Gson gson;
@@ -79,8 +85,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         //initialize the database references that we will be using
         dataBaseRoot = FirebaseDatabase.getInstance().getReference();
         mDatabaseRatings = FirebaseDatabase.getInstance().getReference("ratings");
-        mUserRatings = FirebaseDatabase.getInstance().getReference("users");
-        favoriteReference = FirebaseDatabase.getInstance().getReference(DB_FAVORITE);
+        mUsers = FirebaseDatabase.getInstance().getReference("users");
 
         Intent intent = getIntent();
         recipe = (Recipe)intent.getSerializableExtra("RecipeSelection");
@@ -96,8 +101,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // get the uri of the recipe so that we can use it as a key in our ratings/favorites database
         uri = recipe.getRecipeURI();
 
+        // get the URL of the recipe
+        URL = recipe.getRecipeURL();
+
         // this was added for testing purposes
-        recipeURI.setText(uri);
+        //recipeURL.setText(URL);
 
         // when the user sets their own personal rating,
         //    send the rating to the database
@@ -115,7 +123,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         // if the user has a rating for this recipe already, go ahead and update it
                         if(dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists() && fromUser) {
                             initialUserRating = dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).getValue(Float.class);
-                            mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
+                            mUsers.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
                                     .setValue(rating);
                             changedUserRating = rating;
                             // if the user is changing their rating
@@ -125,13 +133,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
                                         - (initialUserRating - changedUserRating));
                             } else if(initialUserRating < changedUserRating) {
                                 mRecipeReference.child("totalRating").setValue(dataSnapshot.child("ratings").child(uri)
+
                                         .child("totalRating").getValue(Float.class)
                                         + (changedUserRating - initialUserRating));
                             }
                             LayerDrawable stars = (LayerDrawable) recipeRatingBar.getProgressDrawable();
                             stars.getDrawable(2).setColorFilter(Color.parseColor("#FDD017"), PorterDuff.Mode.SRC_ATOP);
                         } else if((!dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists()) && fromUser) {
-                            mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
+                            mUsers.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
                                     .setValue(rating);
                             // if the recipe exists in the ratings section of firebase and is a new
                             //    unaltered rating from the user, just add to the
@@ -160,23 +169,56 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         });
     }
+    //Opens browser  with the link to the recipe
+    public void openRecipe(View view){
+        String recipeLink = recipe.getRecipeURL();
+        Uri site = Uri.parse(recipeLink);
+        Intent selection = new Intent();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, site);
 
+        if(browserIntent.resolveActivity(getPackageManager())!=null){
+            startActivity(browserIntent);
+        }
+    }
+    //Displays the ingredients of the recipe, health labels, and nutrients in the scroll view
     private void populateViews() {
         //Set Recipe image
         new DownloadImageTask(recipeImageView).execute(recipe.getImageLink());
         recipeName.setText(recipe.getLabel());
         ArrayList<String> ingredients = recipe.getIngredientLines();
+        ArrayList<String> healthLabels = recipe.getHealthLabels();
+        HashMap<String, Nutrient> nutrients = recipe.getNutrients();
+        calorieVal.setText(Double.toString(Math.round(recipe.getCalories())));
+        yieldVal.setText(Integer.toString(recipe.getYield()));
+
+        ingredientList.setText("Ingredients");
+
         for (int i = 0; i<ingredients.size(); i++){
             //populate text view with multiple lines
             //https://android--examples.blogspot.com/2015/01/textview-new-line-multiline-in-android.html
-            if(i == 0){
-                ingredientList.setText(ingredients.get(i));
-            }
-            else{
                 ingredientList.append(System.getProperty("line.separator"));
                 ingredientList.append(ingredients.get(i));
-            }
+
         }
+
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append("Health Labels: ");
+        for (int j = 0; j<healthLabels.size(); j++){
+            ingredientList.append(System.getProperty("line.separator"));
+            ingredientList.append(healthLabels.get(j));
+        }
+
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append(System.getProperty("line.separator"));
+        ingredientList.append("Nutrients: ");
+        for(Nutrient nutrientInfo: nutrients.values()){
+            ingredientList.append(System.getProperty("line.separator"));
+            ingredientList.append(nutrientInfo.toString());
+        }
+
+
+
 
         uri = recipe.getRecipeURI();
 
@@ -206,11 +248,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         json = gson.toJson(recipe);
 
         //Checks if a recipe is already a favorite
-        final String recpipeID = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
-        favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        final String recpipeID = recipe.getRecipeURI();
+        mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(recpipeID)) {
+                if (dataSnapshot.child(currentFirebaseUser.getUid()).child(DB_FAVORITE).hasChild(recpipeID)) {
                     favorite = true;
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGold));
                 } else {
@@ -228,16 +270,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // get the uri of the recipe so that we can use it as a key in our favorites database
+                uri = recipe.getRecipeURI();
                 if (favorite) {
                     //Currently favorite
                     favorite = false;
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBackgroundLight));
-                    favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // get the uri of the recipe so that we can use it as a key in our ratings database
-                            uri = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
-                            favoriteReference.child(uri).removeValue();
+                            mUsers.child(currentFirebaseUser.getUid()).child(DB_FAVORITE).child(uri).removeValue();
                         }
 
                         @Override
@@ -249,12 +291,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     //Currently NOT favorite
                     favorite = true;
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGold));
-                    favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // get the uri of the recipe so that we can use it as a key in our ratings database
-                            String uri = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
-                            favoriteReference.child(uri).setValue(json);
+                            mUsers.child(currentFirebaseUser.getUid()).child(DB_FAVORITE).child(uri).setValue(json);
                         }
 
                         @Override
@@ -273,13 +313,15 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeImageView = (ImageView) findViewById(R.id.recipeImageView);
         recipeName = (TextView) findViewById(R.id.recipeName);
         ingredientList = (TextView) findViewById(R.id.ingredientList);
+        calorieVal = (TextView) findViewById(R.id.caloriesVal);
+        yieldVal = (TextView) findViewById(R.id.yieldVal);
         favoriteButton = findViewById(R.id.favoriteButton);
         ingredientList.setMovementMethod(new ScrollingMovementMethod());
 
         recipeRatingBar = (RatingBar) findViewById(R.id.ratingBarDetail);
 
         // added for testing purposes
-        recipeURI = (TextView) findViewById(R.id.textViewURI);
+        //recipeURL = (TextView) findViewById(R.id.textViewURL);
 
     }
 

@@ -40,7 +40,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by Aenah Ramones, Christian Ovid and Alejandro Lemus and related XML
+ * Created by Aenah Ramones, Marinela Sanchez, Christian Ovid and Alejandro Lemus and related XML
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!userInput.getText().toString().isEmpty()) {
                     String searchRecipe = userInput.getText().toString();
-                    int resultsRequested = 100; // changed from amount of results to default 1
+                    int resultsRequested = 50; // changed from amount of results to default 1
                     search(searchRecipe, resultsRequested);
                 }
             }
@@ -226,9 +226,13 @@ public class MainActivity extends AppCompatActivity {
                                 String imgSource = recipe.getString("image");
                                 recipeObject.setImageLink(imgSource);
 
-                                // recipe URI
+                                // recipe URI - Uniform Resource Identifier
                                 String recipeSource = recipe.getString("uri");
                                 recipeObject.setRecipeURI(recipeSource);
+
+                                // recipe URL - Uniform Resource Locator
+                                String recipeURL = recipe.getString("url");
+                                recipeObject.setRecipeURL(recipeURL);
 
                                 int yield = recipe.getInt("yield");
                                 recipeObject.setYield(yield);

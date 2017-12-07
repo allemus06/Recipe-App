@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created By Alejandro Lemus and related XML
+ * Additions by Christian Ovid
  */
 public class Activity_Login extends AppCompatActivity {
 

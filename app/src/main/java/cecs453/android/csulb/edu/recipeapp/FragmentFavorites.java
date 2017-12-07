@@ -1,7 +1,7 @@
 package cecs453.android.csulb.edu.recipeapp;
 
 /**
- * Created by aenah modified by Alejandro
+ * Created by aenah modified by Alejandro Lemus and Christian Ovid
  *
  */
 
@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +26,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 public class FragmentFavorites extends Fragment {
+
+    // get the current user of our app so that we can validate and access their information
+    FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
@@ -50,7 +55,7 @@ public class FragmentFavorites extends Fragment {
     }
 
     private void loadFavorites() {
-        favoriteReference = FirebaseDatabase.getInstance().getReference(DB_FAVORITE);
+        favoriteReference = FirebaseDatabase.getInstance().getReference("users").child(currentFirebaseUser.getUid()).child(DB_FAVORITE);
 
         favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

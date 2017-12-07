@@ -46,10 +46,8 @@ public class Nutrient implements Serializable{
 
     @Override
     public String toString() {
-        return "Nutrient{" +
-                "label='" + label + '\'' +
-                ", quantity=" + quantity +
-                ", unit='" + unit + '\'' +
-                '}';
+        //edited toString method so that each nutrient display with a rounded quantity -Marinela
+
+        return (label + ": " + Math.round(quantity) + unit);
     }
 }
