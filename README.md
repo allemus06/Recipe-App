@@ -11,10 +11,13 @@ Munchies is a food application that serves as a quick and convenient collection 
 * Minimum SDK: API 23: Android 6.0 (Marshmallow)
 * Target SDK: API 26: Android 8.0 (Oreo)
 
-## Milestone 2 - 11/17/2017
+## Milestone 2 - 12/8/2017
 
-### TBC
-Updating soon...
+### Update Project Idea
+Based on the API we used, we as a group have decided to search by **RECIPE** instead of ingredients.
+
+### Everyone
+Coming soon...
 
 ## Milestone 1 - 11/17/2017
 
