@@ -10,13 +10,11 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -147,24 +145,5 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             notifyDataSetChanged();
             return true;
         }
-
-
-
-//        for (String continent : _listDataHeader) {
-//
-//            ArrayList<Country> countryList = continent.getCountryList();
-//            ArrayList<Country> newList = new ArrayList<Country>();
-//            for (Country country : countryList) {
-//                if (country.getCode().toLowerCase().contains(query) ||
-//                        country.getName().toLowerCase().contains(query)) {
-//                    newList.add(country);
-//                }
-//            }
-//            if (newList.size() > 0) {
-//                Continent nContinent = new Continent(continent.getName(), newList);
-//                continentList.add(nContinent);
-//            }
-//        }
-
     }
 }

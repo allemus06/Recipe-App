@@ -2,6 +2,8 @@ package cecs453.android.csulb.edu.recipeapp;
 
 /**
  * Created by Aenah Ramones for Custom Navigation Drawer.
+ * External Sources used:
+ * For custom nav drawer: http://www.tutecentral.com/android-custom-navigation-drawer/
  */
 
 import android.app.Activity;

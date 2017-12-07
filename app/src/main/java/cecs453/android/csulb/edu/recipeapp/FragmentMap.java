@@ -2,6 +2,10 @@ package cecs453.android.csulb.edu.recipeapp;
 
 /**
  * Created by Aenah Ramones with related XML.
+ * External Sources:
+ * Working with Google Places API: https://code.tutsplus.com/articles/google-play-services-using-the-places-api--cms-23715
+ * Permissions with API 23 or greater: https://stackoverflow.com/questions/33666071/android-marshmallow-request-permission
+ *
  */
 import android.Manifest;
 import android.app.AlertDialog;
@@ -10,6 +14,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,7 +61,7 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 
-public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
+public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, LocationListener {
 
     private static final int FINE_LOCATION_PERMISSION_REQUEST = 1;
     private static final int CONNECTION_RESOLUTION_REQUEST = 2;
@@ -169,6 +175,29 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
     }
 
     @Override
+    public void onLocationChanged(Location newLocation) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                new LatLng(newLocation.getLatitude(), newLocation.getLongitude()), 14);
+        mMap.animateCamera(cameraUpdate);
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -231,7 +260,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
             }
 
             LatLng myLat = new LatLng(latitude, longitude);
-            //mMap.addMarker(new MarkerOptions().position(myLat).title("Current Location"));
             MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Current Location");
 
             marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_icon));
@@ -311,7 +339,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleA
             gStreet = parts[1];
             gName = parts[0];
 
-            //Toast.makeText(getActivity(), "Lat is " + lat + " and Lng is " + lng + " and parts is " + parts.length, Toast.LENGTH_SHORT).show();
 
             new AlertDialog.Builder(getActivity())
                     .setTitle("Navigate to Store")
