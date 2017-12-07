@@ -57,6 +57,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     // uri of the recipe used for identifying the recipe in the database
     private String uri;
+    // the original url of the recipe
+    private String URL;
     private float totalRating;
     private int noOfRatings;
     private float initialUserRating;
@@ -64,7 +66,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private boolean favorite;
 
     // this was added for testing purposes by Chris
-    private TextView recipeURI;
+    private TextView recipeURL;
 
     private String DB_FAVORITE = "Favorites";
     Gson gson;
@@ -94,8 +96,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // get the uri of the recipe so that we can use it as a key in our ratings/favorites database
         uri = recipe.getRecipeURI();
 
+        // get the URL of the recipe
+        URL = recipe.getRecipeURL();
+
         // this was added for testing purposes
-        recipeURI.setText(uri);
+        recipeURL.setText(URL);
 
         // when the user sets their own personal rating,
         //    send the rating to the database
@@ -276,7 +281,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeRatingBar = (RatingBar) findViewById(R.id.ratingBarDetail);
 
         // added for testing purposes
-        recipeURI = (TextView) findViewById(R.id.textViewURI);
+        recipeURL = (TextView) findViewById(R.id.textViewURL);
 
     }
 

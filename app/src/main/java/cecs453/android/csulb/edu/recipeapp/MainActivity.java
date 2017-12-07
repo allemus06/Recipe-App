@@ -226,9 +226,13 @@ public class MainActivity extends AppCompatActivity {
                                 String imgSource = recipe.getString("image");
                                 recipeObject.setImageLink(imgSource);
 
-                                // recipe URI
+                                // recipe URI - Uniform Resource Identifier
                                 String recipeSource = recipe.getString("uri");
                                 recipeObject.setRecipeURI(recipeSource);
+
+                                // recipe URL - Uniform Resource Locator
+                                String recipeURL = recipe.getString("url");
+                                recipeObject.setRecipeURL(recipeURL);
 
                                 int yield = recipe.getInt("yield");
                                 recipeObject.setYield(yield);
