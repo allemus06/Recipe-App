@@ -48,9 +48,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
     // A database reference for handling ratings data in our firebase database
     private DatabaseReference dataBaseRoot;
     private DatabaseReference mDatabaseRatings;
-    private DatabaseReference mUserRatings;
+    private DatabaseReference mUsers;
     private DatabaseReference mRecipeReference;
-    private DatabaseReference favoriteReference;
 
     // this rating bar will display either the user's rating
     //    if the user has not rated the recipe, then display the average rating
@@ -79,8 +78,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         //initialize the database references that we will be using
         dataBaseRoot = FirebaseDatabase.getInstance().getReference();
         mDatabaseRatings = FirebaseDatabase.getInstance().getReference("ratings");
-        mUserRatings = FirebaseDatabase.getInstance().getReference("users");
-        favoriteReference = FirebaseDatabase.getInstance().getReference(DB_FAVORITE);
+        mUsers = FirebaseDatabase.getInstance().getReference("users");
 
         Intent intent = getIntent();
         recipe = (Recipe)intent.getSerializableExtra("RecipeSelection");
@@ -115,7 +113,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         // if the user has a rating for this recipe already, go ahead and update it
                         if(dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists() && fromUser) {
                             initialUserRating = dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).getValue(Float.class);
-                            mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
+                            mUsers.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
                                     .setValue(rating);
                             changedUserRating = rating;
                             // if the user is changing their rating
@@ -125,13 +123,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
                                         - (initialUserRating - changedUserRating));
                             } else if(initialUserRating < changedUserRating) {
                                 mRecipeReference.child("totalRating").setValue(dataSnapshot.child("ratings").child(uri)
+
                                         .child("totalRating").getValue(Float.class)
                                         + (changedUserRating - initialUserRating));
                             }
                             LayerDrawable stars = (LayerDrawable) recipeRatingBar.getProgressDrawable();
                             stars.getDrawable(2).setColorFilter(Color.parseColor("#FDD017"), PorterDuff.Mode.SRC_ATOP);
                         } else if((!dataSnapshot.child("users").child(currentFirebaseUser.getUid()).child("ratings").child(uri).exists()) && fromUser) {
-                            mUserRatings.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
+                            mUsers.child(currentFirebaseUser.getUid()).child("ratings").child(uri)
                                     .setValue(rating);
                             // if the recipe exists in the ratings section of firebase and is a new
                             //    unaltered rating from the user, just add to the
@@ -206,11 +205,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         json = gson.toJson(recipe);
 
         //Checks if a recipe is already a favorite
-        final String recpipeID = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
-        favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        final String recpipeID = recipe.getRecipeURI();
+        mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(recpipeID)) {
+                if (dataSnapshot.child(currentFirebaseUser.getUid()).child(DB_FAVORITE).hasChild(recpipeID)) {
                     favorite = true;
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGold));
                 } else {
@@ -228,16 +227,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // get the uri of the recipe so that we can use it as a key in our favorites database
+                uri = recipe.getRecipeURI();
                 if (favorite) {
                     //Currently favorite
                     favorite = false;
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBackgroundLight));
-                    favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // get the uri of the recipe so that we can use it as a key in our ratings database
-                            uri = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
-                            favoriteReference.child(uri).removeValue();
+                            mUsers.child(currentFirebaseUser.getUid()).child(DB_FAVORITE).child(uri).removeValue();
                         }
 
                         @Override
@@ -249,12 +248,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     //Currently NOT favorite
                     favorite = true;
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGold));
-                    favoriteReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // get the uri of the recipe so that we can use it as a key in our ratings database
-                            String uri = recipe.getRecipeURI().substring(recipe.getRecipeURI().indexOf('#') + 1);
-                            favoriteReference.child(uri).setValue(json);
+                            mUsers.child(currentFirebaseUser.getUid()).child(DB_FAVORITE).child(uri).setValue(json);
                         }
 
                         @Override
