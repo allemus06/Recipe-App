@@ -1,7 +1,7 @@
 package cecs453.android.csulb.edu.recipeapp;
 
 /**
- * Created by aenah modified by Alejandro
+ * Created by aenah modified by Alejandro Lemus and Christian Ovid
  *
  */
 

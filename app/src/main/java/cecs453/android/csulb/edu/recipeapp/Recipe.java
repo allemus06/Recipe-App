@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 /**
  * Created By Alejandro Lemus
+ * Additions by Christian Ovid
  */
 
 public class Recipe implements Serializable{

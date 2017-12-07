@@ -40,7 +40,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by Aenah Ramones, Christian Ovid and Alejandro Lemus and related XML
+ * Created by Aenah Ramones, Marinela Sanchez, Christian Ovid and Alejandro Lemus and related XML
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!userInput.getText().toString().isEmpty()) {
                     String searchRecipe = userInput.getText().toString();
-                    int resultsRequested = 100; // changed from amount of results to default 1
+                    int resultsRequested = 50; // changed from amount of results to default 1
                     search(searchRecipe, resultsRequested);
                 }
             }
