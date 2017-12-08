@@ -28,7 +28,8 @@ Coming soon...
 Coming soon...
 
 ### Alejandro Lemus:
-Coming soon...
+* Favorites
+	* Added ability to save favorites for a user (5 hours)
 
 ### Aenah Ramones:
 * Finding Nearest store feature:
