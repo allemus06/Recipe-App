@@ -13,8 +13,8 @@ Munchies is a food application that serves as a quick and convenient collection 
 
 ## Milestone 2 - 12/8/2017
 
-### Update Project Idea
-Based on the API we used, we as a group have decided to search by **RECIPE NAME** instead of ingredients.
+### Updates to Project Idea & Project Description
+Based on the API we used, we as a group have decided to search by **RECIPE NAME** instead of ingredients. In regards to finding the nearest grocery stores, unfortunately as of February 2017 Google Places API has deprecated the types "food" and "grocery_store_or_supermarket." To compensate, Munchies will simply find the nearest store via the type "store" instead. A FAQ page has also been created.
 
 ### Everyone:
 * Added a splash page (a few minutes) 
