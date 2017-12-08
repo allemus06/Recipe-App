@@ -1,5 +1,15 @@
 # Munchies
 
+## Authors
+* Alejandro Lemus
+* Christian Ovid
+* Aenah Ramones
+* Marinela Sanchez
+
+### Link to Github
+Below is the link to the project demo:
+	https://github.com/allemus06/Recipe-App
+
 ## Original Project Idea
 This project is to create an Android application which the user could use as a guide to cook. The goal of the application is to simplify the meal choice by using only the ingredients found at home. The user will input the ingredients readily available, input some restrictions; such as low fat, high calories, etc, and the application will display recipes which use the available ingredients and restrictions.
 
@@ -48,6 +58,12 @@ Based on the API we used, we as a group have decided to search by **RECIPE NAME*
 	* Implemented search bar that filtered through questions (2.5 hours)
 	* Designed relevant XML files (1 hour)
 * Custom Navigation Drawer feature; implemented navigation drawer menu to the app (3 hours)
+
+### Sources:
+	Firebase Realtime Database Tutorial: https://www.youtube.com/watch?v=lpFDFK44pX8&t=1s
+	Firebase Documentation - Reading and Writing Data on Android: https://firebase.google.com/docs/database/android/read-and-write?authuser=0
+	Android Documentation - Rating Bar
+	https://developer.android.com/reference/android/widget/RatingBar.html
 
 ## Milestone 1 - 11/17/2017
 
