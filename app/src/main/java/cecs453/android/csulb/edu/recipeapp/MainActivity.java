@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Toast.makeText(getApplicationContext(), "Search Failed :( - " + statusCode, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Search Failed :(" , Toast.LENGTH_SHORT).show();
                 //errorTextView.setText("API Request Fail " + statusCode);
             }
 
