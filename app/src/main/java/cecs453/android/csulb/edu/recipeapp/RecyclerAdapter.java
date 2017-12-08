@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
- * Created by Christian Ovid and Alejandro Lemus
+ * Created by Christian Ovid with modifications by Alejandro Lemus
  * Description: This is the adapter used for the recyclerView component.
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.recyclerViewHolder>{
