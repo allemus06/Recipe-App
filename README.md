@@ -14,9 +14,21 @@ Munchies is a food application that serves as a quick and convenient collection 
 ## Milestone 2 - 12/8/2017
 
 ### Update Project Idea
-Based on the API we used, we as a group have decided to search by **RECIPE** instead of ingredients.
+Based on the API we used, we as a group have decided to search by **RECIPE NAME** instead of ingredients.
 
-### Everyone
+### Everyone:
+Coming soon...
+
+### Christian Ovid:
+Coming soon...
+
+### Marinela Sanchez:
+Coming soon...
+
+### Alejandro Lemus:
+Coming soon...
+
+### Aenah Ramones:
 Coming soon...
 
 ## Milestone 1 - 11/17/2017
@@ -36,7 +48,7 @@ Coming soon...
 * Studying Edamam api to  learn how to read and use the api(1.5 hours)
 * Troubleshooting issues with gradle (4 hours)
 
-### Alejandro Lemus
+### Alejandro Lemus:
 * Created the login/signup activities (4 hours)
 * Integrated Firebase user authentication
 * Integrated backend for api calls and JSON parsing (10 hours)
