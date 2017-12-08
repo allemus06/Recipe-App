@@ -171,7 +171,7 @@ public class FragmentFAQ extends Fragment {
         qTwoAns.add("A: Contact us by clicking this answer, and you can call us regarding this issue so we can fix it.");
 
         List<String> qThreeAns = new ArrayList<String>();
-        qThreeAns.add("Our recipes come from Edamam; click here to be taken to the developer site!");
+        qThreeAns.add("A: Our recipes come from Edamam; click here to be taken to the developer site!");
 
         List<String> qFourAns = new ArrayList<String>();
         qFourAns.add("A: This feature is coming soon!");
