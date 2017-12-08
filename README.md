@@ -22,10 +22,14 @@ Based on the API we used, we as a group have decided to search by **RECIPE NAME*
 * Polished the overall look of the application along with improving various functional parts of the app (the whole development process of the app)
 
 ### Christian Ovid:
-Coming soon...
+* Added Ratings feature - implemented it into RecyclerView items and Recipe Detail activity (one night)
+* Made sure that users had their own ratings to the Firebase Database (one night)
+* Fixed Search Bar issues (a few minutes)
+* Helped Alejandro associate users with their own favorite recipes in the Firebase Database (a few minutes)
+* Added some data fields along with their corresponding setters and getters in the Recipe class (a few minutes).
 
 ### Marinela Sanchez:
-Coming soon...
+* Added more features to the Recipe Detail activity. Included calories, yield, Nutrient information, and health labels. Created “Get Recipe Button” that opens the phone’s browser and opens the web page with the recipe instructions. (3 hours)
 
 ### Alejandro Lemus:
 * Favorites
