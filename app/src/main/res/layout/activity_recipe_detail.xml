@@ -134,6 +134,7 @@
         android:layout_marginTop="8dp"
         android:onClick="openRecipe"
         android:text="@string/open_recipe"
+        android:background="@color/colorBackgroundLight"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredientList" />
 
