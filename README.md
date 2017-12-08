@@ -17,7 +17,9 @@ Munchies is a food application that serves as a quick and convenient collection 
 Based on the API we used, we as a group have decided to search by **RECIPE NAME** instead of ingredients.
 
 ### Everyone:
-Coming soon...
+* Added a splash page (a few minutes) 
+* Added more parts to the Main Activity (the whole development process of the app)
+* Polished the overall look of the application along with improving various functional parts of the app (the whole development process of the app)
 
 ### Christian Ovid:
 Coming soon...
@@ -29,7 +31,18 @@ Coming soon...
 Coming soon...
 
 ### Aenah Ramones:
-Coming soon...
+* Finding Nearest store feature:
+	* Implemented Google Maps API/Google Maps fragment in app (5 hours)
+	* Implemented Permissions and Get Current Location (10 hours)
+	* Implemented Google Places API and Google API Web Service; when “Find Nearest Store” is toggled, gets nearby stores (15 hours)
+	* Implemented Google Navigation intent when marker clicked (1.5 hours)
+	* Designed relevant XML files (1.5 hours)
+* FAQ feature:
+	* Implemented expandable list view as header and list view as child (5 hours)
+	* Implemented web search and phone dial intents to specific answers (1 hour)
+	* Implemented search bar that filtered through questions (2.5 hours)
+	* Designed relevant XML files (1 hour)
+* Custom Navigation Drawer feature; implemented navigation drawer menu to the app (3 hours)
 
 ## Milestone 1 - 11/17/2017
 
